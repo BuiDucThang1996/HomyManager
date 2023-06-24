@@ -1,102 +1,46 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
-  Image,
+  KeyboardAvoidingView,
   SafeAreaView,
+  StatusBar,
   StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  PermissionsAndroid,
+  useColorScheme,
 } from 'react-native';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import RNBootSplash from 'react-native-bootsplash';
-
-const requestCameraPermission = async () => {
-  try {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-      {
-        title: 'Cool Photo App Camera Permission',
-        message:
-          'Cool Photo App needs access to your camera ' +
-          'so you can take awesome pictures.',
-        buttonNeutral: 'Ask Me Later',
-        buttonNegative: 'Cancel',
-        buttonPositive: 'OK',
-      },
-    );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      console.log('You can use the camera');
-    } else {
-      console.log('Camera permission denied');
-    }
-  } catch (err) {
-    console.warn(err);
-  }
-};
+import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {NavigationContainer} from '@react-navigation/native';
+import {Provider} from 'react-redux';
+import {store} from './src/store/store';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import MainNavigator from './src/navigations/MainNavigator';
 
 const App = () => {
-  const [base64Image, setBase64Image] = useState();
+  const isDarkMode = useColorScheme() === 'dark';
 
-  useEffect(() => {
-    const closeSplash = async () => {
-      await RNBootSplash.hide({fade: true});
-    };
-    requestCameraPermission();
-    closeSplash();
-  }, []);
+  const backgroundStyle = {
+    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  };
 
-  const openCamera = async () => {
-    const result = await launchCamera({
-      includeBase64: true,
-      quality: 0.8,
-    });
-    setBase64Image(result?.assets[0]?.base64);
-  };
-  const openGallery = async () => {
-    const result = await launchImageLibrary({
-      includeBase64: true,
-      quality: 0.8,
-      selectionLimit: 100,
-    });
-    setBase64Image(result?.assets[0]?.base64);
-  };
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View style={styles.container}>
-        <TouchableOpacity style={styles.camera} onPress={openCamera}>
-          <Text style={styles.text}>Open Camera</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={openGallery}
-          style={[styles.camera, {marginTop: 40}]}>
-          <Text style={styles.text}>Open Gallery</Text>
-        </TouchableOpacity>
-        <Image
-          resizeMode="contain"
-          style={styles.image}
-          source={{uri: `data:image/jpeg;base64,${base64Image}`}}
+    <SafeAreaView style={[backgroundStyle, styles.container]}>
+      <KeyboardAvoidingView style={{flex: 1}}>
+        <StatusBar
+          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+          backgroundColor={backgroundStyle.backgroundColor}
         />
-      </View>
+        <Provider store={store}>
+          <GestureHandlerRootView style={styles.container}>
+            <NavigationContainer>
+              <MainNavigator />
+            </NavigationContainer>
+          </GestureHandlerRootView>
+        </Provider>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'black',
-  },
-  camera: {
-    width: 180,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text: {color: 'white', fontSize: 16, fontWeight: '600'},
-  image: {width: 200, height: 200},
+  container: {flex: 1},
 });
 
 export default App;
