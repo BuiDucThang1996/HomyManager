@@ -42,7 +42,7 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Vui lòng cấp quyền truy cập thư viện ảnh</string>
 	<key>UILaunchStoryboardName</key>
-	<string>BootSplash.storyboard</string>
+	<string>SplashScreen.storyboard</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
