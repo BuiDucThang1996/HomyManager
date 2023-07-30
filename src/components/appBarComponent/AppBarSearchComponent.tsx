@@ -1,11 +1,12 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import TextInputComponent from '../commonComponent/TextInputComponent';
 import ButtonComponent from '../commonComponent/ButtonComponent';
 import {icons, colors} from '../../constants';
 
 const CustomSearchAppBar = (props: any) => {
   const {
+    iconHome,
     iconLeft,
     label,
     iconRight,
@@ -19,27 +20,48 @@ const CustomSearchAppBar = (props: any) => {
     placeholder,
     onChangeText,
     onPress,
+    svgLeft,
     iconRightTextInput,
   } = props;
 
   return (
     <View
       style={{
-        height: 134,
+        // height: 134,
         backgroundColor: colors.mainColor,
         borderBottomLeftRadius: 24,
         borderBottomRightRadius: 24,
         paddingHorizontal: 10,
       }}>
       <View style={styles.styleAppBar}>
-        {iconLeft && (
-          <ButtonComponent
-            icon={iconLeft}
-            styleIcon={styles.icon}
-            onPress={pressIconLeft}
-          />
-        )}
-        {label && <Text style={styles.label}>{label}</Text>}
+        <TouchableOpacity
+          style={{flexDirection: 'row', alignItems: 'center',flex:1}}
+          onPress={pressIconLeft}>
+          {svgLeft && (
+            <ButtonComponent
+              svgIcon={svgLeft}
+              widthSvg={30}
+              heightSvg={30}
+              disabled={true}
+            />
+          )}
+          {iconLeft && (
+            <ButtonComponent
+              icon={iconLeft}
+              styleIcon={styles.icon}
+              disabled={true}
+            />
+          )}
+          {iconHome && (
+            <ButtonComponent
+              icon={iconHome}
+              styleIcon={styles.iconHome}
+              disabled={true}
+            />
+          )}
+          {label && <Text style={styles.label}>{label}</Text>}
+        </TouchableOpacity>
+
         {iconRight && (
           <ButtonComponent
             styleButton={{marginHorizontal: 15}}
@@ -62,7 +84,7 @@ const CustomSearchAppBar = (props: any) => {
           />
         ) : null}
       </View>
-      <View style={styles.viewContainer}>
+      {/* <View style={styles.viewContainer}>
         <View style={styles.viewSearch}>
           <TextInputComponent
             styleViewTextInput={styles.viewInput}
@@ -83,22 +105,21 @@ const CustomSearchAppBar = (props: any) => {
             />
           )}
         </View>
-      </View>
+      </View> */}
     </View>
   );
 };
 const styles = StyleSheet.create({
   styleAppBar: {
     height: 56,
-    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
   },
-  icon: {width: 24, height: 24},
+  icon: {width: 24, height: 24, tintColor: 'white'},
+  iconHome: {width: 24, height: 24},
   label: {
     color: 'white',
     marginLeft: 8,
-    flex: 1,
     fontSize: 17,
   },
   viewContainer: {

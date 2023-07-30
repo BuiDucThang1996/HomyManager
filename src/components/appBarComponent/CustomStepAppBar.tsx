@@ -1,9 +1,9 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import ButtonComponent from '../commonComponent/ButtonComponent';
-import {icons, colors, } from '../../constants';
+import {icons, colors} from '../../constants';
 
-const CustomStepAppBar = (props:any) => {
+const CustomStepAppBar = (props: any) => {
   const {
     iconLeft,
     label,
@@ -17,15 +17,20 @@ const CustomStepAppBar = (props:any) => {
   return (
     <View style={styles.container}>
       <View style={styles.styleAppBar}>
-        {iconLeft && (
-          <ButtonComponent
-            styleButton={styles.styleButtonTop}
-            icon={iconLeft}
-            styleIcon={styles.icon}
-            onPress={pressIconLeft}
-          />
-        )}
-        {label && <Text style={styles.label}>{label}</Text>}
+        <TouchableOpacity
+          style={{flexDirection: 'row', alignItems: 'center', flex: 1}}
+          onPress={pressIconLeft}>
+          {iconLeft && (
+            <ButtonComponent
+              styleButton={styles.styleButtonTop}
+              icon={iconLeft}
+              styleIcon={styles.icon}
+              disabled={true}
+            />
+          )}
+          {label && <Text style={styles.label}>{label}</Text>}
+        </TouchableOpacity>
+
         {iconRight && (
           <ButtonComponent
             styleButton={[styles.styleButtonTop, {marginHorizontal: 10}]}
@@ -100,9 +105,8 @@ const styles = StyleSheet.create({
   label: {
     color: 'white',
     marginLeft: 8,
-    flex: 1,
     fontSize: 17,
-    fontWeight:'bold'
+    fontWeight: 'bold',
   },
   styleButtonTop: {width: 25, height: 56},
   viewSearch: {

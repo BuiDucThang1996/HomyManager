@@ -6,12 +6,12 @@ import {
   StyleSheet,
   Text,
   View,
+  TouchableOpacity,
 } from 'react-native';
 import {colors, icons, images} from '../../constants';
 import ButtonComponent from '../commonComponent/ButtonComponent';
-const widthLine = Dimensions.get('window').width - 20;
 
-const AppBarHouseInfor = (props:any) => {
+const AppBarHouseInfor = (props: any) => {
   const {
     onPressLeft,
     nameBuilding,
@@ -22,12 +22,19 @@ const AppBarHouseInfor = (props:any) => {
   return (
     <ImageBackground source={images.im_appBar} style={{paddingHorizontal: 10}}>
       <View style={styles.viewTabBarTop}>
-        <ButtonComponent
-          styleIcon={styles.iconTop}
-          icon={icons.ic_back}
-          onPress={onPressLeft}
-        />
-        <Text style={{color: 'white', flex: 1}}>Thông tin tòa nhà</Text>
+        <TouchableOpacity
+          style={{flexDirection: 'row', alignItems: 'center', flex: 1}}
+          onPress={onPressLeft}>
+          <ButtonComponent
+            disabled={true}
+            styleIcon={styles.iconTop}
+            icon={icons.ic_back}
+          />
+          <Text style={{color: 'white', fontWeight: '600', fontSize: 17}}>
+            Thông tin tòa nhà
+          </Text>
+        </TouchableOpacity>
+
         {/* <ButtonComponent
           styleIcon={styles.iconTop}
           icon={icons.ic_bell}
@@ -53,7 +60,10 @@ const AppBarHouseInfor = (props:any) => {
             flex: 1,
           }}>
           <View style={{marginTop: 5}}>
-            <Image source={icons.ic_locationHouse} style={{width:32,height:32}} />
+            <Image
+              source={icons.ic_locationHouse}
+              style={{width: 32, height: 32}}
+            />
           </View>
           <View style={{marginLeft: 10, flex: 1}}>
             <Text style={{color: 'white', fontSize: 10}}>

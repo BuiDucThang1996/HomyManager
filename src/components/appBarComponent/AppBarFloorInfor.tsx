@@ -6,21 +6,34 @@ import {
   StyleSheet,
   Text,
   View,
+  TouchableOpacity,
 } from 'react-native';
 import {colors, icons, images} from '../../constants';
 import ButtonComponent from '../commonComponent/ButtonComponent';
+const widthLine = Dimensions.get('window').width - 20;
 
 const AppBarFloorInfor = (props: any) => {
   const {onPressLeft, pressIconRight, hauseName, address} = props;
   return (
     <ImageBackground source={images.im_appBar} style={{paddingHorizontal: 10}}>
       <View style={styles.viewAppBarTop}>
-        <ButtonComponent
+        <TouchableOpacity
+          style={{flexDirection: 'row', alignItems: 'center',flex:1}}
+          onPress={onPressLeft}>
+          <ButtonComponent
+            disabled={true}
+            styleIcon={styles.iconTop}
+            icon={icons.ic_back}
+          />
+          <Text style={styles.titleScreen}>Thông tin tầng</Text>
+        </TouchableOpacity>
+
+        {/* <ButtonComponent
           styleIcon={styles.iconTop}
-          icon={icons.ic_back}
-          onPress={onPressLeft}
-        />
-        <Text style={styles.titleScreen}>Thông tin tầng</Text>
+          icon={icons.ic_bell}
+          onPress={pressIconRight}
+        /> */}
+        {/* <ButtonComponent styleIcon={styles.iconTop} icon={icons.ic_moreOption} /> */}
       </View>
       <View style={styles.line} />
       <View style={{height: 130}}>
@@ -65,7 +78,7 @@ const styles = StyleSheet.create({
   },
   icon: {tintColor: 'white', width: 18, height: 18, marginRight: 2},
   iconTop: {width: 24, height: 24, tintColor: 'white', marginRight: 10},
-  titleScreen: {color: 'white', flex: 1, fontWeight: '600', fontSize: 17},
+  titleScreen: {color: 'white', fontWeight: '600', fontSize: 17},
   viewAppBarTop: {height: 56, alignItems: 'center', flexDirection: 'row'},
 });
 export default AppBarFloorInfor;

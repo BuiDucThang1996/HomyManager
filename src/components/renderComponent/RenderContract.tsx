@@ -50,8 +50,7 @@ const RenderContract = (props:any) => {
           styles.viewRow,
           {justifyContent: 'space-between', marginTop: 3},
         ]}>
-        <View></View>
-        {/* <ButtonComponent
+        <ButtonComponent
           styleButton={[
             styles.buttonRender,
             {borderColor: colors.backgroundOrange},
@@ -60,7 +59,7 @@ const RenderContract = (props:any) => {
           styleLabel={{fontWeight: '600', color: colors.backgroundOrange}}
           onPress={pressEdit}
         />
-        <ButtonComponent
+        {/* <ButtonComponent
           styleButton={[styles.buttonRender, {borderColor: colors.mainColor}]}
           label={'Thanh lý'}
           styleLabel={{fontWeight: '600', color: colors.mainColor}}

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "510128750087",
+    "project_id": "homy-manager---dev",
+    "storage_bucket": "homy-manager---dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:510128750087:android:0a32b9b85852040506b4a2",
+        "android_client_info": {
+          "package_name": "com.homymanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "510128750087-06co3e58p00etpb747s6ui7i407t5bfo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.homymanager",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "510128750087-8pllrmi0dbgntfd59hadsdjspn2o95p8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaFADGAcQp1sWn08Ih1jTr81-_2PjRoxI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "510128750087-8pllrmi0dbgntfd59hadsdjspn2o95p8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

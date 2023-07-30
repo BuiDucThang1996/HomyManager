@@ -61,7 +61,7 @@ export const GetLocationCitysApi = (token:string) => {
 export const GetDistrictByCityIdApi = (token:string, cityId:string) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${BASEURL}/locations/cites/${cityId}/districts`, {
+      .get(`${BASEURL}/locations/cities/${cityId}/districts`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
