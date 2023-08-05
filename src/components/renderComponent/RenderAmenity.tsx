@@ -14,16 +14,16 @@ const RenderAmenity = (props: any) => {
   const widthImage = Dimensions.get('window').width / 2 - 20;
   const {label, isDelete, deleteAmenity, onPress, disabled} = props;
   return (
-    <View style={[styles.container, {width: widthImage}]}>
+    <TouchableOpacity
+      disabled={disabled}
+      onPress={onPress}
+      style={[styles.container, {width: widthImage}]}>
       <View style={[{flexDirection: 'row'}, styles.viewCenter]}>
-        <TouchableOpacity
-          disabled={disabled}
-          onPress={onPress}
-          style={{flex: 1}}>
+        <View style={{flex: 1}}>
           <Text numberOfLines={1} style={[styles.text]}>
             {label}
           </Text>
-        </TouchableOpacity>
+        </View>
         {isDelete && (
           <ButtonComponent
             styleIcon={styles.iconDelete}
@@ -32,7 +32,7 @@ const RenderAmenity = (props: any) => {
           />
         )}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 const styles = StyleSheet.create({
