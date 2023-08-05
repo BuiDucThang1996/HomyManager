@@ -22,6 +22,8 @@ import {
   dateToDMY,
   dateToYMD,
   formatNumber,
+  onOpenCamera,
+  onOpenLibrary,
   validateNumber,
 } from '../../../utils/common';
 import ComponentInput from '../../../components/commonComponent/ComponentInput';
@@ -41,7 +43,6 @@ import CustomModalDateTimePicker from '../../../components/commonComponent/Custo
 import {PAYMENTDURATION} from '../../../resource/dataPicker';
 import CustomPickerDay from '../../../components/commonComponent/CustomPickerDay';
 import CustomModalCamera from '../../../components/commonComponent/CustomModalCamera';
-// import ImagePicker from 'react-native-image-crop-picker';
 import {
   DeleteImageApi,
   PostImageContractApi,
@@ -188,43 +189,28 @@ const EditContractInfor = () => {
   const renderSelectAmenity = (item: any, index: number) => {
     return <RenderAmenity label={item?.name} />;
   };
-
   const openCamera = () => {
     setModalCamera(false);
-    setTimeout(() => {
-      ImagePicker.openCamera({width: 300, height: 400})
-        .then(image => {
-          let eachImg = {...image, uri: image?.path};
-          const eachResult: any = [...contractImages, eachImg];
-          setContractImages(eachResult);
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCamera(false);
-        });
-    }, 1000);
+    onOpenCamera().then((image:any) => {
+      let eachImg = {...image[0]};
+      const eachResult: any = [...contractImages, eachImg];
+      setContractImages(eachResult);
+    })
+    .catch(e => {
+      setModalCamera(false);
+    });
   };
 
   const openGallery = () => {
     setModalCamera(false);
-    setTimeout(() => {
-      ImagePicker.openPicker({multiple: true})
-        .then(async image => {
-          let albumImg: any = [];
-          for (let index = 0; index < image.length; index++) {
-            let element = image[index];
-            let eachElement = {...element, uri: element?.path};
-            albumImg.push(eachElement);
-          }
-          const eachResult = [...contractImages];
-          const newResult = eachResult.concat(albumImg);
-          setContractImages(newResult);
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCamera(false);
-        });
-    }, 1000);
+    onOpenLibrary().then(async (image:any) => {
+      const eachResult = [...contractImages];
+      const newResult = eachResult.concat(image);
+      setContractImages(newResult);
+    })
+    .catch(e => {
+      setModalCamera(false);
+    });
   };
 
   const deleteImage = async (item: any) => {
@@ -333,7 +319,7 @@ const EditContractInfor = () => {
               .then((res: any) => {
                 if (res?.status == 200) {
                   dispatch(updateReloadStatus('EditContractSuccess'));
-                  navigation.goBack();
+                  navigation.navigate('ContractManager');
                   setLoading(false);
                 }
               })
@@ -342,7 +328,7 @@ const EditContractInfor = () => {
               });
           }
           dispatch(updateReloadStatus('EditContractSuccess'));
-          navigation.goBack();
+          navigation.navigate('ContractManager');
           setLoading(false);
         } else {
           Alert.alert('Lỗi', 'Có lỗi sảy ra,vui lòng thử lại !');

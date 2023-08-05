@@ -11,7 +11,7 @@ export const PostImageBuildingApi = (
     let image = hauseImages[i];
     formHause.append('files', {
       uri: image?.uri,
-      name: getFileName(image),
+      name: image?.fileName,
       type: 'image/jpeg',
     });
   }
@@ -43,7 +43,7 @@ export const PostImageUnitApi = (
     let image = unitImages[i];
     formUnit.append('files', {
       uri: image?.uri,
-      name: getFileName(image),
+      name: image?.fileName,
       type: 'image/jpeg',
     });
   }
@@ -74,7 +74,7 @@ export const PostInvoiceServiceFilesUploadApi = (
     let image = invoiceImages[i];
     formInvoice.append('files', {
       uri: image?.uri,
-      name: getFileName(image),
+      name: image?.fileName,
       type: 'image/jpeg',
     });
   }
@@ -109,7 +109,7 @@ export const PostImageUserApi = (
     let image = userImages[i];
     formUser.append('files', {
       uri: image?.uri,
-      name: getFileName(image),
+      name: image?.fileName,
       type: 'image/jpeg',
     });
   }
@@ -141,7 +141,7 @@ export const PostImageIdentityApi = (
     let image = identityImages[i];
     formUser.append('files', {
       uri: image?.uri,
-      name: getFileName(image),
+      name: image?.fileName,
       type: 'image/jpeg',
     });
   }
@@ -173,7 +173,7 @@ export const PostImageContractApi = (
     let image = ContractImages[i];
     formContract.append('files', {
       uri: image?.uri,
-      name: getFileName(image),
+      name: image?.fileName,
       type: 'image/jpeg',
     });
   }
@@ -205,7 +205,7 @@ export const PostImageInvoiceApi = (
     let image = invoiceImages[i];
     formInvoice.append('files', {
       uri: image?.uri,
-      name: getFileName(image),
+      name: image?.fileName,
       type: 'image/jpeg',
     });
   }
@@ -241,7 +241,7 @@ export const PostImageInvoiceUploadPaymentApi = (
     let image = invoiceImages[i];
     formInvoice.append('files', {
       uri: image?.uri,
-      name: getFileName(image),
+      name: image?.fileName,
       type: 'image/jpeg',
     });
   }

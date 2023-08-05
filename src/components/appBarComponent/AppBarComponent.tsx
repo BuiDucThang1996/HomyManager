@@ -46,7 +46,7 @@ const AppBarComponent = (props: any) => {
       )}
       {iconSecondRight && (
         <ButtonComponent
-          styleButton={styles.styleButton}
+          styleButton={[styles.styleButton, {marginLeft: 15}]}
           icon={iconSecondRight}
           styleIcon={styles.icon}
           onPress={pressSeccodIconRight}

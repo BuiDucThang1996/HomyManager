@@ -61,7 +61,7 @@ export const CreateNewAmenityApi = (token: string, data: any) => {
 export const PutAmenityApi = (token: string, data: any, amenitieId: string) => {
   return new Promise((resolve, reject) => {
     axios
-      .put(`${BASEURL}/amenities${amenitieId}`, data, {
+      .put(`${BASEURL}/amenities/${amenitieId}`, data, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ export const PutAmenityApi = (token: string, data: any, amenitieId: string) => {
 export const DeleteAmenityApi = (token: string, amenitieId: string) => {
   return new Promise((resolve, reject) => {
     axios
-      .delete(`${BASEURL}/amenities${amenitieId}`, {
+      .delete(`${BASEURL}/amenities/${amenitieId}`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',

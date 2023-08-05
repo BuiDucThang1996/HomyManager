@@ -22,6 +22,8 @@ import {
   dateToDMY,
   dateToYMD,
   formatNumber,
+  onOpenCamera,
+  onOpenLibrary,
   validateNumber,
 } from '../../../utils/common';
 import CustomModalDateTimePicker from '../../../components/commonComponent/CustomModalDateTimePicker';
@@ -33,7 +35,6 @@ import {amenityState} from '../../../store/slices/amenitySlice';
 import {serviceState} from '../../../store/slices/serviceSlice';
 import {tenantState, updateTenant} from '../../../store/slices/tenantSlice';
 import CustomPersonInfor from '../../../components/homeComponent/CustomPersonInfor';
-// import ImagePicker from 'react-native-image-crop-picker';
 import RenderAmenity from '../../../components/renderComponent/RenderAmenity';
 import RenderServiceInput from '../../../components/renderComponent/RenderServiceInput';
 import ComponentRenderImage from '../../../components/renderComponent/ComponentRenderImage';
@@ -153,41 +154,28 @@ const CreateContractFromUnit = () => {
   };
   const openCamera = () => {
     setModalCamera(false);
-    setTimeout(() => {
-      ImagePicker.openCamera({width: 300, height: 400})
-        .then(image => {
-          let eachImg = {...image, uri: image?.path};
-          const eachResult = [...contractImages, eachImg];
-          setContractImages(eachResult);
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCamera(false);
-        });
-    }, 1000);
+    onOpenCamera().then((image:any) => {
+      let eachImg = {...image[0]};
+      const eachResult: any = [...contractImages, eachImg];
+      setContractImages(eachResult);
+    })
+    .catch(e => {
+      setModalCamera(false);
+    });
   };
 
   const openGallery = () => {
     setModalCamera(false);
-    setTimeout(() => {
-      ImagePicker.openPicker({multiple: true})
-        .then(async image => {
-          let albumImg = [];
-          for (let index = 0; index < image.length; index++) {
-            let element = image[index];
-            let eachElement = {...element, uri: element?.path};
-            albumImg.push(eachElement);
-          }
-          const eachResult = [...contractImages];
-          const newResult = eachResult.concat(albumImg);
-          setContractImages(newResult);
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCamera(false);
-        });
-    }, 1000);
+    onOpenLibrary().then(async (image:any) => {
+      const eachResult = [...contractImages];
+      const newResult = eachResult.concat(image);
+      setContractImages(newResult);
+    })
+    .catch(e => {
+      setModalCamera(false);
+    });
   };
+  
   const renderSelectSevice = (item: any, index: any) => {
     return (
       <RenderServiceInput

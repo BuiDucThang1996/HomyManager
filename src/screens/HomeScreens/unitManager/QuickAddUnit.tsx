@@ -9,7 +9,6 @@ import RenderAmenity from '../../../components/renderComponent/RenderAmenity';
 import TextTitleComponent from '../../../components/commonComponent/TextTitleComponent';
 import CustomTwoButtonBottom from '../../../components/commonComponent/CustomTwoButtonBottom';
 import CustomModalCamera from '../../../components/commonComponent/CustomModalCamera';
-// import ImagePicker from 'react-native-image-crop-picker';
 import LoadingComponent from '../../../components/commonComponent/LoadingComponent';
 import SuggestComponent from '../../../components/commonComponent/SuggestComponent';
 import {useDispatch, useSelector} from 'react-redux';
@@ -27,7 +26,7 @@ import {UNITTYPE} from '../../../resource/dataPicker';
 import {PostImageUnitApi} from '../../../apis/homeApi/fileDataApi';
 import ComponentInput from '../../../components/commonComponent/ComponentInput';
 import ComponentButton from '../../../components/commonComponent/ComponentButton';
-import {formatNumber, validateNumber} from '../../../utils/common';
+import {formatNumber, onOpenCamera, onOpenLibrary, validateNumber} from '../../../utils/common';
 import ComponentRenderImage from '../../../components/renderComponent/ComponentRenderImage';
 import {StraightLine} from '../../../components/commonComponent/LineConponent';
 
@@ -121,40 +120,26 @@ const QuickAddUnit = () => {
 
   const openCamera = () => {
     setModalCamera(false);
-    setTimeout(() => {
-      ImagePicker.openCamera({width: 300, height: 400})
-        .then(image => {
-          let eachImg = {...image, uri: image?.path};
-          const eachResult = [...unitImages, eachImg];
-          setUnitImages(eachResult);
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCamera(false);
-        });
-    }, 1000);
+    onOpenCamera().then((image:any) => {
+      let eachImg = {...image[0]};
+      const eachResult = [...unitImages, eachImg];
+      setUnitImages(eachResult);
+    })
+    .catch(e => {
+      setModalCamera(false);
+    });
   };
 
   const openGallery = () => {
     setModalCamera(false);
-    setTimeout(() => {
-      ImagePicker.openPicker({multiple: true})
-        .then(async image => {
-          let albumImg = [];
-          for (let index = 0; index < image.length; index++) {
-            let element = image[index];
-            let eachElement = {...element, uri: element?.path};
-            albumImg.push(eachElement);
-          }
-          const eachResult = [...unitImages];
-          const newResult = eachResult.concat(albumImg);
-          setUnitImages(newResult);
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCamera(false);
-        });
-    }, 1000);
+    onOpenLibrary().then(async (image:any) => {
+      const eachResult = [...unitImages];
+      const newResult = eachResult.concat(image);
+      setUnitImages(newResult);
+    })
+    .catch(e => {
+      setModalCamera(false);
+    });
   };
 
   const createNewUnit = async () => {

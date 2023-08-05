@@ -26,10 +26,10 @@ import {updateReloadStatus} from '../../../store/slices/reloadSlice';
 import {bankAccountState} from '../../../store/slices/bankAccountSlice';
 import RenderService from '../../../components/renderComponent/RenderService';
 import RenderAmenity from '../../../components/renderComponent/RenderAmenity';
-import CustomModalPicker from '../../../components/commonComponent/CustomModalPicker';
 import CustomButtonBottom from '../../../components/commonComponent/CustomButtonBottom';
 import {serviceState} from '../../../store/slices/serviceSlice';
 import {amenityState} from '../../../store/slices/amenitySlice';
+import BottomSheetPicker from '../../../components/commonComponent/BottomSheetPicker';
 
 const EditHouseInformation = () => {
   const navigation: any = useNavigation();
@@ -259,37 +259,50 @@ const EditHouseInformation = () => {
         />
       )}
       {modalCity && (
-        <CustomModalPicker
-          modalVisible={modalCity}
+        <BottomSheetPicker
           data={listCity}
-          pressClose={() => setModalCity(false)}
+          handlerShow={(index: number) => {
+            if (index === 0) {
+              setModalCity(false);
+            }
+          }}
           onPressItem={(item: any) => {
             setModalCity(false);
             getDistrictData(item);
           }}
+          handlerCancel={() => setModalCity(false)}
         />
       )}
       {modalDistrict && (
-        <CustomModalPicker
-          modalVisible={modalDistrict}
+        <BottomSheetPicker
           data={listDistrict}
-          pressClose={() => setModalDistrict(false)}
+          handlerShow={(index: number) => {
+            if (index === 0) {
+              setModalDistrict(false);
+            }
+          }}
           onPressItem={(item: any) => {
             setModalDistrict(false);
             getWardData(item);
           }}
+          handlerCancel={() => setModalDistrict(false)}
         />
       )}
       {modalWard && (
-        <CustomModalPicker
-          modalVisible={modalWard}
+        <BottomSheetPicker
           data={listWard}
-          pressClose={() => setModalWard(false)}
+          handlerShow={(index: number) => {
+            if (index === 0) {
+              setModalWard(false);
+            }
+          }}
           onPressItem={(item: any) => {
+            setModalWard(false);
             let eachHause = {...hause, ward: item};
             setHause(eachHause);
             setModalWard(false);
           }}
+          handlerCancel={() => setModalWard(false)}
         />
       )}
       {modalbillingDate && (
@@ -410,6 +423,7 @@ const EditHouseInformation = () => {
           onPress={() => setModalCity(true)}
         />
         <ComponentButton
+          disabled={hause?.city?.name ? false : true}
           important={true}
           type={'buttonSelect'}
           viewComponent={{marginTop: 10}}
@@ -419,6 +433,7 @@ const EditHouseInformation = () => {
           onPress={() => setModalDistrict(true)}
         />
         <ComponentButton
+          disabled={hause?.city?.name && hause?.district?.name ? false : true}
           important={true}
           type={'buttonSelect'}
           viewComponent={{marginTop: 10}}

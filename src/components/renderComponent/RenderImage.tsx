@@ -11,7 +11,6 @@ import ButtonComponent from '../commonComponent/ButtonComponent';
 const RenderImage = (props:any) => {
   const {data, deleteItem, deleteButton} = props;
   const [showImage, setShowImage] = useState(false);
-  // console.log(showImage);
   return (
     <View>
       {showImage && (

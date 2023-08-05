@@ -11,6 +11,7 @@ import {
   ChooseTenant,
   AddNewTenant,
   AddNewService,
+  EditService,
   AddNewUnit,
   ChooseABank,
   ChooseAmenity,
@@ -42,6 +43,7 @@ import {
   ServiceDetail,
   AmenityManager,
   AmenityDetail,
+  EditAmenity,
   BankAccountManager,
   BankAccountDetal,
 } from '../../screens';
@@ -282,6 +284,13 @@ const StackHomeNavigator = () => {
         }}
       />
       <Stack.Screen
+        component={EditAmenity}
+        name={'EditAmenity'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         component={ServiceManager}
         name={'ServiceManager'}
         options={{
@@ -305,6 +314,13 @@ const StackHomeNavigator = () => {
       <Stack.Screen
         component={ChooseService}
         name={'ChooseService'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={EditService}
+        name={'EditService'}
         options={{
           headerShown: false,
         }}

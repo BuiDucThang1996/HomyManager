@@ -14,11 +14,15 @@ import ButtonComponent from '../../../components/commonComponent/ButtonComponent
 import TextTitleComponent from '../../../components/commonComponent/TextTitleComponent';
 import CustomModalNotify from '../../../components/commonComponent/CustomModalNotify';
 import {colors, icons, images} from '../../../constants';
-// import ImagePicker from 'react-native-image-crop-picker';
 import CustomModalCamera from '../../../components/commonComponent/CustomModalCamera';
 import LoadingComponent from '../../../components/commonComponent/LoadingComponent';
 import CustomModalDateTimePicker from '../../../components/commonComponent/CustomModalDateTimePicker';
-import {convertDate, dateToYMD} from '../../../utils/common';
+import {
+  convertDate,
+  dateToYMD,
+  onOpenCamera,
+  onOpenLibrary,
+} from '../../../utils/common';
 import {token} from '../../../store/slices/tokenSlice';
 import CustomTwoButtonBottom from '../../../components/commonComponent/CustomTwoButtonBottom';
 import {GetUserAPi, PutUserAPi} from '../../../apis/homeApi/userApi';
@@ -47,12 +51,12 @@ const EditAccount = () => {
   const [modaSaveAccount, setModaSaveAccount] = useState(false);
   const [modalIdentityIssueDate, setModalIdentityIssueDate] = useState(false);
 
-  // console.log(user);
   useEffect(() => {
     loadingData();
   }, []);
 
   const loadingData = async () => {
+    setLoading(true);
     await GetUserAPi(tokenStore)
       .then((res: any) => {
         if (res?.status == 200) {
@@ -66,47 +70,39 @@ const EditAccount = () => {
   const openCameraAvatar = () => {
     const avatarId = user?.avatarImage?.id;
     setModalCameraAvatar(false);
-    setTimeout(() => {
-      ImagePicker.openCamera({width: 300, height: 400})
-        .then(async image => {
-          let eachImg = {...image, uri: image?.path};
-          let avatarImage = [{...eachImg}];
-          if (avatarId) {
-            deleteImage(avatarId).then(() => {
-              updateAvatarImage(avatarImage);
-            });
-          } else {
+    onOpenCamera()
+      .then(async (avatarImage: any) => {
+        if (avatarId) {
+          deleteImage(avatarId).then(() => {
             updateAvatarImage(avatarImage);
-          }
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCameraAvatar(false);
-        });
-    }, 1000);
+          });
+        } else {
+          updateAvatarImage(avatarImage);
+        }
+      })
+      .catch(e => {
+        setModalCameraAvatar(false);
+      });
   };
+
   const openGalleryAvatar = () => {
     const avatarId = user?.avatarImage?.id;
     setModalCameraAvatar(false);
-    setTimeout(() => {
-      ImagePicker.openPicker({multiple: false})
-        .then(async image => {
-          let eachImg = {...image, uri: image?.path};
-          let avatarImage = [{...eachImg}];
-
-          if (avatarId) {
-            deleteImage(avatarId).then(() => {
-              updateAvatarImage(avatarImage);
-            });
-          } else {
+    onOpenLibrary()
+      .then(async (image: any) => {
+        let eachImg = {...image};
+        let avatarImage = [{...eachImg[0]}];
+        if (avatarId) {
+          deleteImage(avatarId).then(() => {
             updateAvatarImage(avatarImage);
-          }
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCameraAvatar(false);
-        });
-    }, 1000);
+          });
+        } else {
+          updateAvatarImage(avatarImage);
+        }
+      })
+      .catch(e => {
+        setModalCameraAvatar(false);
+      });
   };
 
   const updateAvatarImage = async (avatarImage: any) => {
@@ -122,48 +118,38 @@ const EditAccount = () => {
         console.log(error);
       });
   };
+
   const openCamera = () => {
     setModalCamera(false);
-    setTimeout(() => {
-      ImagePicker.openCamera({width: 300, height: 400})
-        .then(image => {
-          let eachImg = {...image, uri: image?.path};
-          let newAlbumImg = [...albumImage, eachImg];
-          setAlbumImage(newAlbumImg);
-          let eachResult = [...user?.identityImages, eachImg];
-          let newUser = {...user, identityImages: eachResult};
-          setUser(newUser);
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCamera(false);
-        });
-    }, 1000);
+    onOpenCamera()
+      .then((image: any) => {
+        let eachImg = {...image[0]};
+        let newAlbumImg = [...albumImage, eachImg];
+        setAlbumImage(newAlbumImg);
+        let eachResult = [...user?.identityImages, eachImg];
+        let newUser = {...user, identityImages: eachResult};
+        setUser(newUser);
+      })
+      .catch(e => {
+        setModalCamera(false);
+      });
   };
 
   const openGallery = () => {
     setModalCamera(false);
-    setTimeout(() => {
-      ImagePicker.openPicker({multiple: true})
-        .then(async image => {
-          let albumImg: any = [];
-          image.forEach(element => {
-            let eachElement = {...element, uri: element?.path};
-            albumImg.push(eachElement);
-          });
-          let eachAlbumImg = [...albumImage];
-          let newAlbumImg = eachAlbumImg.concat(albumImg);
-          setAlbumImage(newAlbumImg);
-          const eachResult = [...user?.identityImages];
-          const newResult = eachResult.concat(albumImg);
-          let newUser = {...user, identityImages: newResult};
-          setUser(newUser);
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCamera(false);
-        });
-    }, 1000);
+    onOpenLibrary()
+      .then(async (image: any) => {
+        let eachAlbumImg = [...albumImage];
+        let newAlbumImg = eachAlbumImg.concat(image);
+        setAlbumImage(newAlbumImg);
+        const eachResult = [...user?.identityImages];
+        const newResult = eachResult.concat(image);
+        let newUser = {...user, identityImages: newResult};
+        setUser(newUser);
+      })
+      .catch(e => {
+        setModalCamera(false);
+      });
   };
 
   const deleteImage = async (imageId: any) => {
@@ -212,8 +198,8 @@ const EditAccount = () => {
                 console.log(error, 'error post img');
               });
           } else {
-            dispatch(updateReloadStatus('postImageFail'));
-            setLoading(true);
+            dispatch(updateReloadStatus('updateUserInforSuccess'));
+            setLoading(false);
             navigation.goBack();
           }
         }
@@ -274,8 +260,7 @@ const EditAccount = () => {
           onDateChange={(value: any) => {
             let newUser = {...user, identityIssueDate: dateToYMD(value)};
             setUser(newUser);
-            console.log(newUser);
-
+            // console.log(newUser);
             setIdentityIssueDate(value);
           }}
           onPress={() => setModalIdentityIssueDate(false)}

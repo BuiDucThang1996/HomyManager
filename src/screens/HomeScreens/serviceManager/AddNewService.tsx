@@ -42,7 +42,7 @@ const AddNewService = () => {
     await CreateNewService(tokenStore, data)
       .then((res: any) => {
         if (res?.status == 200) {
-          dispatch(updateReloadStatus(false));
+          dispatch(updateReloadStatus('addNewServiceSuccess'));
           setLoadingService(false);
           navigation.goBack();
         }
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   eachContainer: {
     flex: 1,
     paddingHorizontal: 10,
-    paddingTop: 10,
+    marginTop: 10,
     backgroundColor: colors.backgroundGrey,
   },
   viewComponent: {

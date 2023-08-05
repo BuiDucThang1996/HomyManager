@@ -15,9 +15,13 @@ import AppBarComponent from '../../../components/appBarComponent/AppBarComponent
 import {colors, icons, images} from '../../../constants';
 import TextTitleComponent from '../../../components/commonComponent/TextTitleComponent';
 import IndexInputComponent from '../../../components/commonComponent/IndexInputComponent';
-import {formatNumber, validateNumber} from '../../../utils/common';
+import {
+  formatNumber,
+  onOpenCamera,
+  onOpenLibrary,
+  validateNumber,
+} from '../../../utils/common';
 import ButtonComponent from '../../../components/commonComponent/ButtonComponent';
-// import ImagePicker from 'react-native-image-crop-picker';
 import CustomModalCamera from '../../../components/commonComponent/CustomModalCamera';
 import CustomTwoButtonBottom from '../../../components/commonComponent/CustomTwoButtonBottom';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -85,44 +89,38 @@ const ConfirmInvoiceClosing = () => {
 
   const openCamera = () => {
     setModalCamera(false);
-    setTimeout(() => {
-      ImagePicker.openCamera({width: 300, height: 400})
-        .then(image => {
-          let eachImage = {...image, uri: image?.path};
-          let eachValue = [...progressiveServiceClosings];
-          eachValue[indexValue] = {
-            ...eachValue[indexValue],
-            image: eachImage,
-            imageUsageNumber: eachImage,
-          };
-          setProgressiveServiceClosings(eachValue);
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCamera(false);
-        });
-    }, 1000);
+    onOpenCamera()
+      .then((image: any) => {
+        let eachImage = {...image[0]};
+        let eachValue = [...progressiveServiceClosings];
+        eachValue[indexValue] = {
+          ...eachValue[indexValue],
+          image: eachImage,
+          imageUsageNumber: eachImage,
+        };
+        setProgressiveServiceClosings(eachValue);
+      })
+      .catch(e => {
+        setModalCamera(false);
+      });
   };
 
   const openGallery = () => {
     setModalCamera(false);
-    setTimeout(() => {
-      ImagePicker.openPicker({multiple: false})
-        .then(image => {
-          let eachImage = {...image, uri: image?.path};
-          let eachValue = [...progressiveServiceClosings];
-          eachValue[indexValue] = {
-            ...eachValue[indexValue],
-            image: eachImage,
-            imageUsageNumber: eachImage,
-          };
-          setProgressiveServiceClosings(eachValue);
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCamera(false);
-        });
-    }, 1000);
+    onOpenLibrary()
+      .then((image: any) => {
+        let eachImage = {...image[0]};
+        let eachValue = [...progressiveServiceClosings];
+        eachValue[indexValue] = {
+          ...eachValue[indexValue],
+          image: eachImage,
+          imageUsageNumber: eachImage,
+        };
+        setProgressiveServiceClosings(eachValue);
+      })
+      .catch(e => {
+        setModalCamera(false);
+      });
   };
 
   const checkData = () => {

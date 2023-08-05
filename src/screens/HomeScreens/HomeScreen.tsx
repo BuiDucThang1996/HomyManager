@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef, useMemo, useCallback} from 'react';
 import {
   StyleSheet,
   View,
@@ -98,6 +98,8 @@ const HomeScreen = () => {
       });
   };
 
+  const [show, setShow] = useState(false);
+
   return (
     <View style={styles.container}>
       {loading && <LoadingComponent modalVisible={loading} />}
@@ -132,7 +134,6 @@ const HomeScreen = () => {
         onChangeText={(text: string) => setTextSearch(text)}
         placeholder={'Tìm kiếm...'}
       />
-
       <ScrollView style={styles.eachContainer}>
         <View style={styles.viewRow}>
           <CustomViewButton
@@ -245,7 +246,6 @@ const styles = StyleSheet.create({
   title: {fontSize: 17, fontWeight: 'bold', color: 'black'},
   textTitle: {fontSize: 17, fontWeight: 'bold', color: '#163a5f'},
 });
-
 const CustomViewButton = (props: any) => {
   const {
     imageBG,
@@ -333,5 +333,5 @@ const styleOption = StyleSheet.create({
     borderRadius: 10,
   },
 });
-
 export default HomeScreen;
+

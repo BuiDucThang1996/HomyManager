@@ -46,11 +46,13 @@ import AmenityManager from './HomeScreens/amenityManager/AmenityManager';
 import AmenityDetail from './HomeScreens/amenityManager/AmenityDetail';
 import AddNewAmenity from './HomeScreens/amenityManager/AddNewAmenity';
 import ChooseAmenity from './HomeScreens/amenityManager/ChooseAmenity';
+import EditAmenity from './HomeScreens/amenityManager/EditAmenity';
 // ServiceManager -------------------------------
 import ServiceManager from './HomeScreens/serviceManager/ServiceManager';
 import ServiceDetail from './HomeScreens/serviceManager/ServiceDetail';
 import AddNewService from './HomeScreens/serviceManager/AddNewService';
 import ChooseService from './HomeScreens/serviceManager/ChooseService';
+import EditService from './HomeScreens/serviceManager/EditService';
 // InvoiceClosingManager -------------------------------
 import InvoiceClosingManager from './HomeScreens/invoiceClosingManager/InvoiceClosingManager';
 import ConfirmInvoiceClosing from './HomeScreens/invoiceClosingManager/ConfirmInvoiceClosing';
@@ -107,11 +109,13 @@ export {
   AmenityDetail,
   AddNewAmenity,
   ChooseAmenity,
+  EditAmenity,
   // ServiceManager -------------------------------
   ServiceManager,
   ServiceDetail,
   AddNewService,
   ChooseService,
+  EditService,
   // InvoiceClosingManager -------------------------------
   InvoiceClosingManager,
   ConfirmInvoiceClosing,

@@ -4,13 +4,11 @@ import {StyleSheet, View, Alert, ScrollView} from 'react-native';
 import CustomModalDateTimePicker from '../../../components/commonComponent/CustomModalDateTimePicker';
 import CustomTwoButtonBottom from '../../../components/commonComponent/CustomTwoButtonBottom';
 import {icons, colors} from '../../../constants';
-// import ImagePicker from 'react-native-image-crop-picker';
 import CustomModalCamera from '../../../components/commonComponent/CustomModalCamera';
 import CustomTimeButtons from '../../../components/commonComponent/CustomTimeButtons';
 import CustomStepAppBar from '../../../components/appBarComponent/CustomStepAppBar';
 import TextTitleComponent from '../../../components/commonComponent/TextTitleComponent';
 import SuggestComponent from '../../../components/commonComponent/SuggestComponent';
-import CustomModalPicker from '../../../components/commonComponent/CustomModalPicker';
 import LoadingComponent from '../../../components/commonComponent/LoadingComponent';
 import {
   GetLocationCitysApi,
@@ -20,12 +18,13 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../store/slices/tokenSlice';
 import {updateHouseInfor} from '../../../store/slices/houseInforSlice';
-import {formatNumber, validateNumber} from '../../../utils/common';
+import {formatNumber, onOpenCamera, onOpenLibrary, validateNumber} from '../../../utils/common';
 import {StraightLine} from '../../../components/commonComponent/LineConponent';
 import ComponentInput from '../../../components/commonComponent/ComponentInput';
 import ComponentButton from '../../../components/commonComponent/ComponentButton';
 import ComponentRenderImage from '../../../components/renderComponent/ComponentRenderImage';
 import {updateReloadStatus} from '../../../store/slices/reloadSlice';
+import BottomSheetPicker from '../../../components/commonComponent/BottomSheetPicker';
 
 const AddNewHouseStep1 = (props: any) => {
   const navigation: any = useNavigation();
@@ -117,40 +116,28 @@ const AddNewHouseStep1 = (props: any) => {
 
   const openCamera = () => {
     setModalCamera(false);
-    setTimeout(() => {
-      ImagePicker.openCamera({width: 300, height: 400})
-        .then(image => {
-          let eachImg = {...image, uri: image?.path};
-          const eachResult = [...hauseImages, eachImg];
-          setHauseImages(eachResult);
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCamera(false);
-        });
-    }, 1000);
+    onOpenCamera().then((image:any) => {
+      let eachImg = {...image[0]};
+      const eachResult = [...hauseImages, eachImg];
+      setHauseImages(eachResult);
+    })
+    .catch(e => {
+      setModalCamera(false);
+    });
+   
   };
 
   const openGallery = () => {
     setModalCamera(false);
-    setTimeout(() => {
-      ImagePicker.openPicker({multiple: true, width: 300, height: 400})
-        .then(async image => {
-          let albumImg = [];
-          for (let index = 0; index < image.length; index++) {
-            let element = image[index];
-            let eachElement = {...element, uri: element?.path};
-            albumImg.push(eachElement);
-          }
-          const eachResult = [...hauseImages];
-          const newResult = eachResult.concat(albumImg);
-          setHauseImages(newResult);
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCamera(false);
-        });
-    }, 1000);
+    onOpenLibrary().then(async image => {
+      const eachResult = [...hauseImages];
+      const newResult = eachResult.concat(image);
+      setHauseImages(newResult);
+    })
+    .catch(e => {
+      setModalCamera(false);
+    });
+    
   };
 
   const goToStepTwo = () => {
@@ -220,37 +207,50 @@ const AddNewHouseStep1 = (props: any) => {
         />
       )}
       {modalCity && (
-        <CustomModalPicker
-          modalVisible={modalCity}
+        <BottomSheetPicker
           data={listCity}
-          pressClose={() => setModalCity(false)}
+          handlerShow={(index: number) => {
+            if (index === 0) {
+              setModalCity(false);
+            }
+          }}
           onPressItem={(item: any) => {
             setModalCity(false);
             getDistrictData(item);
           }}
+          handlerCancel={() => setModalCity(false)}
         />
       )}
       {modalDistrict && (
-        <CustomModalPicker
-          modalVisible={modalDistrict}
+        <BottomSheetPicker
           data={listDistrict}
-          pressClose={() => setModalDistrict(false)}
+          handlerShow={(index: number) => {
+            if (index === 0) {
+              setModalDistrict(false);
+            }
+          }}
           onPressItem={(item: any) => {
             setModalDistrict(false);
             getWardData(item);
           }}
+          handlerCancel={() => setModalDistrict(false)}
         />
       )}
       {modalWard && (
-        <CustomModalPicker
-          modalVisible={modalWard}
+        <BottomSheetPicker
           data={listWard}
-          pressClose={() => setModalWard(false)}
+          handlerShow={(index: number) => {
+            if (index === 0) {
+              setModalWard(false);
+            }
+          }}
           onPressItem={(item: any) => {
+            setModalWard(false);
             setWardName(item?.name);
             setWardId(item?.id);
             setModalWard(false);
           }}
+          handlerCancel={() => setModalWard(false)}
         />
       )}
       <CustomStepAppBar
@@ -334,6 +334,7 @@ const AddNewHouseStep1 = (props: any) => {
           onPress={() => setModalCity(true)}
         />
         <ComponentButton
+          disabled={cityName ? false : true}
           important={true}
           type={'buttonSelect'}
           viewComponent={{marginTop: 10}}
@@ -343,6 +344,7 @@ const AddNewHouseStep1 = (props: any) => {
           onPress={() => setModalDistrict(true)}
         />
         <ComponentButton
+          disabled={cityName && districtName ? false : true}
           important={true}
           type={'buttonSelect'}
           viewComponent={{marginTop: 10}}

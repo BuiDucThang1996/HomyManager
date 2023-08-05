@@ -48,32 +48,15 @@ const ServiceManager = () => {
   const renderListService = (item: any, index: number) => {
     return (
       <RenderService
-        isDelete={true}
+        // isDelete={true}
         icon={`${item?.icon}`}
         name={`${item?.name}`}
         calculateUnit={`${item?.calculateUnit}`}
         fee={`${item?.fee?.toLocaleString()}`}
         onPress={() => navigation.navigate('ServiceDetail', item?.id)}
-        deleteService={() => {
-          Alert.alert('Xóa dịch vụ', 'Bạn có muốn xóa dịch vụ này ?', [
-            {text: 'Hủy', style: 'cancel'},
-            {text: 'Xóa', onPress: () => deleteService(item?.id)},
-          ]);
-        }}
+        deleteService={() => {}}
       />
     );
-  };
-  const deleteService = async (id: any) => {
-    setLoading(true);
-    await DeleteServiceApi(tokenStore, id)
-      .then((res: any) => {
-        if (res?.status == 200) {
-          getListService();
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      });
   };
 
   return (
@@ -82,9 +65,8 @@ const ServiceManager = () => {
       <AppBarSearchComponent
         iconLeft={icons.ic_back}
         label={'Quản lý dịch vụ'}
-        // iconRight={icons.ic_bell}
-        // pressIconRight={() => navigation.navigate('NotificationScreen')}
-        // iconSecondRight={icons.ic_moreOption}
+        iconRight={icons.ic_bell}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
         pressIconLeft={() => navigation.goBack()}
         keyboard={keyboard}
         textSearch={textSearch}

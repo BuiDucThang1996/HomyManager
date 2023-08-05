@@ -56,14 +56,9 @@ const AmenityManager = () => {
     return (
       <RenderAmenity
         label={item?.name}
-        isDelete={true}
+        // isDelete={true}
         onPress={() => navigation.navigate('AmenityDetail', item?.id)}
-        deleteAmenity={() => {
-          Alert.alert('Xóa tiện ích', 'Bạn có muốn xóa tiện ích này ?', [
-            {text: 'Hủy', style: 'cancel'},
-            {text: 'Xóa', onPress: () => deleteAmenity(item?.id)},
-          ]);
-        }}
+        deleteAmenity={() => {}}
       />
     );
   };
@@ -87,9 +82,9 @@ const AmenityManager = () => {
       <AppBarSearchComponent
         iconLeft={icons.ic_back}
         label={'Quản lý tiện ích'}
-        // iconRight={icons.ic_bell}
-        // pressIconRight={() => navigation.navigate('NotificationScreen')}
-        // iconSecondRight={icons.ic_moreOption}
+        iconRight={icons.ic_bell}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
+        iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
         keyboard={keyboard}
         textSearch={textSearch}

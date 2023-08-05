@@ -1,4 +1,3 @@
-import ImageResizer from 'react-native-image-resizer';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 export const formatNumber = (value: any) => {
@@ -106,12 +105,11 @@ export const onOpenCamera = () => {
       mediaType: 'photo',
       maxWidth: 1920,
       maxHeight: 1080,
-      quality: 1,
+      quality: 0.8,
     })
       .then(async (res: any) => {
         let listPhoto: any[] = [];
-        let eachPhoto = await resizeImageNotVideo(res?.assets[0]);
-        listPhoto.push(eachPhoto);
+        listPhoto.push(res?.assets[0]);
         resolve(listPhoto);
       })
       .catch(error => {
@@ -126,15 +124,14 @@ export const onOpenLibrary = () => {
       mediaType: 'photo',
       maxWidth: 1920,
       maxHeight: 1080,
-      quality: 1,
+      quality: 0.8,
       selectionLimit: 100,
     })
       .then(async (res: any) => {
         let listPhoto: any[] = [];
         for (let index = 0; index < res?.assets?.length; index++) {
           const element = res?.assets[index];
-          let eachPhoto = await resizeImageNotVideo(element);
-          listPhoto.push(eachPhoto);
+          listPhoto.push(element);
         }
         resolve(listPhoto);
       })
@@ -142,23 +139,4 @@ export const onOpenLibrary = () => {
         reject(error);
       });
   });
-};
-
-export const resizeImageNotVideo = async (image: any) => {
-  let convert = {};
-  await ImageResizer.createResizedImage(image.uri, 1920, 1080, 'JPEG', 100)
-    .then(response => {
-      if (checkSizeImageChat(response)) {
-        convert = {
-          ...response,
-          mime: image?.mime,
-          type: image?.mime,
-          uri: response.uri,
-        };
-      }
-    })
-    .catch(err => {
-      console.log(err);
-    });
-  return convert;
 };

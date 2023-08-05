@@ -5,7 +5,6 @@ import AppBarComponent from '../../../components/appBarComponent/AppBarComponent
 import {colors, icons, images} from '../../../constants';
 import CustomTwoButtonBottom from '../../../components/commonComponent/CustomTwoButtonBottom';
 import CustomModalNotify from '../../../components/commonComponent/CustomModalNotify';
-// import ImagePicker from 'react-native-image-crop-picker';
 import CustomModalCamera from '../../../components/commonComponent/CustomModalCamera';
 import SuggestComponent from '../../../components/commonComponent/SuggestComponent';
 import TextTitleComponent from '../../../components/commonComponent/TextTitleComponent';
@@ -13,7 +12,7 @@ import CustomModalDateTimePicker from '../../../components/commonComponent/Custo
 import LoadingComponent from '../../../components/commonComponent/LoadingComponent';
 import ComponentInput from '../../../components/commonComponent/ComponentInput';
 import ComponentButton from '../../../components/commonComponent/ComponentButton';
-import {dateToDMY, dateToYMD} from '../../../utils/common';
+import {dateToDMY, dateToYMD, onOpenCamera, onOpenLibrary} from '../../../utils/common';
 import {CreateNewTenantApi} from '../../../apis/homeApi/tenantApi';
 import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../store/slices/tokenSlice';
@@ -57,76 +56,48 @@ const AddNewTenant = () => {
 
   const openCamera = () => {
     setModalCamera(false);
-    setTimeout(() => {
-      ImagePicker.openCamera({width: 300, height: 400})
-        .then(image => {
-          let eachImg = {...image, uri: image?.path};
-          const eachResult = [...albumImage, eachImg];
-          setAlbumImage(eachResult);
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCamera(false);
-        });
-    }, 1000);
+    onOpenCamera().then((image:any) => {
+      let eachImg = {...image[0]};
+      const eachResult = [...albumImage, eachImg];
+      setAlbumImage(eachResult);
+    })
+    .catch(e => {
+      setModalCamera(false);
+    });
   };
   const openGallery = () => {
     setModalCamera(false);
-    setTimeout(() => {
-      ImagePicker.openPicker({multiple: true})
-        .then(async image => {
-          let albumImg = [];
-          for (let index = 0; index < image.length; index++) {
-            let element = image[index];
-            let eachElement = {...element, uri: element?.path};
-            albumImg.push(eachElement);
-          }
-          const eachResult = [...albumImage];
-          const newResult = eachResult.concat(albumImg);
-          setAlbumImage(newResult);
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCamera(false);
-        });
-    }, 1000);
+    onOpenLibrary().then(async (image:any) => {
+      const eachResult = [...albumImage];
+      const newResult = eachResult.concat(image);
+      setAlbumImage(newResult);
+    })
+    .catch(e => {
+      setModalCamera(false);
+    });
   };
   const openCameraUser = () => {
     setModalCameraUser(false);
-    setTimeout(() => {
-      ImagePicker.openCamera({width: 300, height: 400})
-        .then(image => {
-          let eachImg = {...image, uri: image?.path};
-          let eachResult = [...albumImageUser, eachImg];
-          setAlbumImageUser(eachResult);
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCameraUser(false);
-        });
-    }, 1000);
+    onOpenCamera().then((image:any) => {
+      let eachImg = {...image[0]};
+      let eachResult = [...albumImageUser, eachImg];
+      setAlbumImageUser(eachResult);
+    })
+    .catch(e => {
+      setModalCameraUser(false);
+    });
   };
 
   const openGalleryUser = () => {
     setModalCameraUser(false);
-    setTimeout(() => {
-      ImagePicker.openPicker({multiple: true})
-        .then(async image => {
-          let albumImg = [];
-          for (let index = 0; index < image.length; index++) {
-            let element = image[index];
-            let eachElement = {...element, uri: element?.path};
-            albumImg.push(eachElement);
-          }
-          let eachResult = [...albumImageUser];
-          let newResult = eachResult.concat(albumImg);
-          setAlbumImageUser(newResult);
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCamera(false);
-        });
-    }, 1000);
+    onOpenLibrary().then(async (image:any) => {
+      let eachResult = [...albumImageUser];
+      let newResult = eachResult.concat(image);
+      setAlbumImageUser(newResult);
+    })
+    .catch(e => {
+      setModalCamera(false);
+    });
   };
 
   const createNewTenant = async () => {

@@ -35,7 +35,7 @@ const CustomSearchAppBar = (props: any) => {
       }}>
       <View style={styles.styleAppBar}>
         <TouchableOpacity
-          style={{flexDirection: 'row', alignItems: 'center',flex:1}}
+          style={{flexDirection: 'row', alignItems: 'center', flex: 1}}
           onPress={pressIconLeft}>
           {svgLeft && (
             <ButtonComponent
@@ -70,19 +70,20 @@ const CustomSearchAppBar = (props: any) => {
             onPress={pressIconRight}
           />
         )}
-        {typeof iconSecondRight == 'string' ? (
-          <ButtonComponent
-            icon={{uri: iconSecondRight}}
-            styleIcon={{width: 30, height: 30, borderRadius: 30}}
-            onPress={pressSeccodIconRight}
-          />
-        ) : iconSecondRight == null || iconSecondRight == undefined ? (
-          <ButtonComponent
-            icon={icons.ic_user}
-            styleIcon={{width: 24, height: 24}}
-            onPress={pressSeccodIconRight}
-          />
-        ) : null}
+        {iconSecondRight &&
+          (typeof iconSecondRight == 'string' ? (
+            <ButtonComponent
+              icon={{uri: iconSecondRight}}
+              styleIcon={{width: 30, height: 30, borderRadius: 30}}
+              onPress={pressSeccodIconRight}
+            />
+          ) : iconSecondRight == null || iconSecondRight == undefined ? (
+            <ButtonComponent
+              icon={icons.ic_user}
+              styleIcon={{width: 24, height: 24}}
+              onPress={pressSeccodIconRight}
+            />
+          ) : null)}
       </View>
       {/* <View style={styles.viewContainer}>
         <View style={styles.viewSearch}>

@@ -25,7 +25,7 @@ import CustomModalNotify from '../../../components/commonComponent/CustomModalNo
 import {colors, icons} from '../../../constants';
 import {token} from '../../../store/slices/tokenSlice';
 import {updateReloadStatus} from '../../../store/slices/reloadSlice';
-import {convertDate, formatNumber} from '../../../utils/common';
+import {convertDate, formatNumber, onOpenCamera, onOpenLibrary} from '../../../utils/common';
 import {
   BreakLine,
   StraightLine,
@@ -33,7 +33,6 @@ import {
 import CustomViewServiceFee from '../../../components/homeComponent/CustomViewServiceFee';
 import ComponentRenderImage from '../../../components/renderComponent/ComponentRenderImage';
 import CustomModalCamera from '../../../components/commonComponent/CustomModalCamera';
-// import ImagePicker from 'react-native-image-crop-picker';
 import {
   DeleteImageApi,
   PostImageInvoiceUploadPaymentApi,
@@ -75,34 +74,26 @@ const InvoiceUnpaidDetail = () => {
 
   const openCamera = () => {
     setModalCamera(false);
-    setTimeout(() => {
-      ImagePicker.openCamera({width: 300, height: 400})
-        .then(image => {
-          let eachImg = {...image, uri: image?.path};
-          const eachResult = [...paymentImages, eachImg];
-          setPaymentImages(eachResult);
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCamera(false);
-        });
-    }, 1000);
+    onOpenCamera().then((image:any) => {
+      let eachImg = {...image[0]};
+      const eachResult = [...paymentImages, eachImg];
+      setPaymentImages(eachResult);
+    })
+    .catch(e => {
+      setModalCamera(false);
+    });
   };
 
   const openGallery = () => {
     setModalCamera(false);
-    setTimeout(() => {
-      ImagePicker.openPicker({multiple: false})
-        .then(async image => {
-          let eachImg = {...image, uri: image?.path};
-          const eachResult = [...paymentImages, eachImg];
-          setPaymentImages(eachResult);
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCamera(false);
-        });
-    }, 1000);
+    onOpenLibrary().then(async (image:any) => {
+      let eachImg = {...image[0]};
+      const eachResult = [...paymentImages, eachImg];
+      setPaymentImages(eachResult);
+    })
+    .catch(e => {
+      setModalCamera(false);
+    });
   };
   const renderItem = (item: any, index: number) => {
     let totalPrice =

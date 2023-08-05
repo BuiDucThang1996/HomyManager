@@ -9,9 +9,7 @@ import CustomTimeButtons from '../../../components/commonComponent/CustomTimeBut
 import CustomModalDateTimePicker from '../../../components/commonComponent/CustomModalDateTimePicker';
 import CustomTwoButtonBottom from '../../../components/commonComponent/CustomTwoButtonBottom';
 import LoadingComponent from '../../../components/commonComponent/LoadingComponent';
-// import ImagePicker from 'react-native-image-crop-picker';
 import CustomModalCamera from '../../../components/commonComponent/CustomModalCamera';
-import CustomModalPicker from '../../../components/commonComponent/CustomModalPicker';
 import CustomPickerDay from '../../../components/commonComponent/CustomPickerDay';
 import SuggestComponent from '../../../components/commonComponent/SuggestComponent';
 import RenderAmenity from '../../../components/renderComponent/RenderAmenity';
@@ -23,6 +21,8 @@ import {
   dateToDMY,
   dateToYMD,
   formatNumber,
+  onOpenCamera,
+  onOpenLibrary,
   validateNumber,
 } from '../../../utils/common';
 import {PAYMENTDURATION} from '../../../resource/dataPicker';
@@ -39,6 +39,7 @@ import {PostImageContractApi} from '../../../apis/homeApi/fileDataApi';
 import ComponentRenderImage from '../../../components/renderComponent/ComponentRenderImage';
 import {StraightLine} from '../../../components/commonComponent/LineConponent';
 import RenderServiceInput from '../../../components/renderComponent/RenderServiceInput';
+import BottomSheetPicker from '../../../components/commonComponent/BottomSheetPicker';
 
 const CreateContract = () => {
   const navigation: any = useNavigation();
@@ -162,40 +163,26 @@ const CreateContract = () => {
 
   const openCamera = () => {
     setModalCamera(false);
-    setTimeout(() => {
-      ImagePicker.openCamera({width: 300, height: 400})
-        .then(image => {
-          let eachImg = {...image, uri: image?.path};
-          const eachResult: any = [...contractImages, eachImg];
-          setContractImages(eachResult);
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCamera(false);
-        });
-    }, 1000);
+    onOpenCamera().then((image:any) => {
+      let eachImg = {...image[0]};
+      const eachResult: any = [...contractImages, eachImg];
+      setContractImages(eachResult);
+    })
+    .catch(e => {
+      setModalCamera(false);
+    });
   };
 
   const openGallery = () => {
     setModalCamera(false);
-    setTimeout(() => {
-      ImagePicker.openPicker({multiple: true})
-        .then(async image => {
-          let albumImg: any = [];
-          for (let index = 0; index < image.length; index++) {
-            let element = image[index];
-            let eachElement = {...element, uri: element?.path};
-            albumImg.push(eachElement);
-          }
-          const eachResult = [...contractImages];
-          const newResult = eachResult.concat(albumImg);
-          setContractImages(newResult);
-        })
-        .catch(e => {
-          ImagePicker.clean();
-          setModalCamera(false);
-        });
-    }, 1000);
+    onOpenLibrary().then(async (image:any) => {
+      const eachResult = [...contractImages];
+      const newResult = eachResult.concat(image);
+      setContractImages(newResult);
+    })
+    .catch(e => {
+      setModalCamera(false);
+    });
   };
 
   const getListUnit = async (item: any) => {
@@ -307,7 +294,7 @@ const CreateContract = () => {
             await PostImageContractApi(tokenStore, contractId, contractImages)
               .then((res: any) => {
                 if (res?.status == 200) {
-                  dispatch(updateReloadStatus('updateContractFromRoom'));
+                  dispatch(updateReloadStatus('updateImageContractSuccess'));
                   setLoading(false);
                   navigation.navigate('ContractManager');
                 }
@@ -316,7 +303,7 @@ const CreateContract = () => {
                 console.log(error);
               });
           } else {
-            dispatch(updateReloadStatus('updateContractFromRoom'));
+            dispatch(updateReloadStatus('createNewContractSuccess'));
             setLoading(false);
             navigation.navigate('ContractManager');
           }
@@ -340,21 +327,35 @@ const CreateContract = () => {
         />
       )}
       {modalHause && (
-        <CustomModalPicker
-          data={listHauses}
-          pressClose={() => setModalHause(false)}
-          onPressItem={(item: any) => getListUnit(item)}
-        />
+         <BottomSheetPicker
+         data={listHauses}
+         handlerShow={(index: number) => {
+           if (index === 0) {
+            setModalHause(false);
+           }
+         }}
+         onPressItem={(item: any) => {
+           getListUnit(item);
+         }}
+         handlerCancel={() => setModalHause(false)}
+       />
+     
       )}
       {modalUnit && (
-        <CustomModalPicker
-          data={listUnits}
-          pressClose={() => setModalUnit(false)}
-          onPressItem={(item: any) => {
+           <BottomSheetPicker
+           data={listUnits}
+           handlerShow={(index: number) => {
+             if (index === 0) {
+              setModalUnit(false);
+             }
+           }}
+           onPressItem={(item: any) => {
             getUnitDetailAPi(item);
             setModalUnit(false);
-          }}
-        />
+           }}
+           handlerCancel={() => setModalUnit(false)}
+         />
+   
       )}
       {modalStartDate && (
         <CustomModalDateTimePicker

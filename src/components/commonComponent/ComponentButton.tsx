@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, Image} from 'react-native';
 import {colors, icons} from '../../constants';
 
-const ComponentButton = (props:any) => {
+const ComponentButton = (props: any) => {
   const {
     type,
     title,
@@ -13,6 +13,7 @@ const ComponentButton = (props:any) => {
     value,
     placeholder,
     icon,
+    disabled,
   } = props;
   return (
     <View style={viewComponent}>
@@ -23,6 +24,7 @@ const ComponentButton = (props:any) => {
       </View>
       {type == 'buttonSelect' && (
         <TouchableOpacity
+          disabled={disabled}
           onPress={onPress}
           style={[styles.viewButton, styleButton]}>
           <Text style={{color: value ? 'black' : 'grey', flex: 1}}>
@@ -37,6 +39,7 @@ const ComponentButton = (props:any) => {
       )}
       {type == 'buttonValue' && (
         <TouchableOpacity
+          disabled={disabled}
           onPress={onPress}
           style={[styles.viewButton, styleButton]}>
           <Text>{placeholder}</Text>
