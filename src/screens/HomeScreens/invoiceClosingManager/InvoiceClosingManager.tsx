@@ -113,7 +113,7 @@ const InvoiceClosingManager = () => {
                 <RenderInvoiceClosing
                   data={item}
                   onPress={() =>
-                    navigation.navigate('ConfirmInvoiceClosing', item?.id)
+                    navigation.navigate('InvoiceClosing', item?.id)
                   }
                 />
               );

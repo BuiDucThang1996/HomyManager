@@ -56,6 +56,7 @@ import EditService from './HomeScreens/serviceManager/EditService';
 // InvoiceClosingManager -------------------------------
 import InvoiceClosingManager from './HomeScreens/invoiceClosingManager/InvoiceClosingManager';
 import ConfirmInvoiceClosing from './HomeScreens/invoiceClosingManager/ConfirmInvoiceClosing';
+import InvoiceClosing from './HomeScreens/invoiceClosingManager/InvoiceClosing';
 // AccountScreen -------------------------------
 import AccountScreen from './HomeScreens/accountManager/AccountScreen';
 import EditAccount from './HomeScreens/accountManager/EditAccount';
@@ -119,6 +120,7 @@ export {
   // InvoiceClosingManager -------------------------------
   InvoiceClosingManager,
   ConfirmInvoiceClosing,
+  InvoiceClosing,
   // AccountScreen -------------------------------
   AccountScreen,
   EditAccount,

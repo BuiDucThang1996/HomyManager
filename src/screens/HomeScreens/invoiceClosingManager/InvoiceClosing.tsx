@@ -43,7 +43,7 @@ import {
 import { useActionSheet } from '@expo/react-native-action-sheet';
 const widthView = Dimensions.get('window').width / 2 - 15;
 
-const ConfirmInvoiceClosing = () => {
+const InvoiceClosing = () => {
   const navigation: any = useNavigation();
   const tokenStore = useSelector(token);
   const dispatch = useDispatch();
@@ -86,66 +86,7 @@ const ConfirmInvoiceClosing = () => {
     getData();
   }, []);
 
-  const {showActionSheetWithOptions} = useActionSheet();
-
-  const renderActionSheet = () => {
-    const options = ['Camera', 'Library', 'Cancel'];
-    const destructiveButtonIndex = 2;
-    const cancelButtonIndex = 2;
-    showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex,
-        destructiveButtonIndex,
-      },
-      (selectedIndex) => {
-        switch (selectedIndex) {
-          case 0:
-             openCamera();
-            break;
-          case 1:
-             openGallery();
-            break;
-          case 2:
-            break;
-        }
-      },
-    );
-  };
-
-  const openCamera = () => {
-    onOpenCamera()
-      .then((image: any) => {
-        let eachImage = {...image[0]};
-        let eachValue = [...progressiveServiceClosings];
-        eachValue[indexValue] = {
-          ...eachValue[indexValue],
-          image: eachImage,
-          imageUsageNumber: eachImage,
-        };
-        setProgressiveServiceClosings(eachValue);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  };
-
-  const openGallery = () => {
-    onOpenLibrary()
-      .then((image: any) => {
-        let eachImage = {...image[0]};
-        let eachValue = [...progressiveServiceClosings];
-        eachValue[indexValue] = {
-          ...eachValue[indexValue],
-          image: eachImage,
-          imageUsageNumber: eachImage,
-        };
-        setProgressiveServiceClosings(eachValue);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  };
+  
 
   const checkData = () => {
     let array = [];
@@ -271,7 +212,7 @@ const ConfirmInvoiceClosing = () => {
     }
   };
 
-  const renderItem=(item:any,index:number)=>{
+  const renderItem = (item:any,index:number) => {
     return (
       <View>
         <TextTitleComponent
@@ -320,6 +261,7 @@ const ConfirmInvoiceClosing = () => {
               title={'Số mới'}
               unit={`${item?.calculateUnit}`}
               placeholder={'Nhập số'}
+              editable={false}
               styleInput={{
                 color: colors.mainColor,
                 borderBottomWidth: 1,
@@ -362,41 +304,7 @@ const ConfirmInvoiceClosing = () => {
                       : item?.image?.uri,
                   }}
                 />
-                <ButtonComponent
-                  styleButton={styles.buttonDeleteImage}
-                  icon={icons.ic_close}
-                  styleIcon={{
-                    width: 20,
-                    height: 20,
-                    tintColor: 'red',
-                  }}
-                  onPress={async () => {
-                    let eachValue = [
-                      ...progressiveServiceClosings,
-                    ];
-                    eachValue[index] = {
-                      ...eachValue[index],
-                      image: null,
-                      imageUsageNumber: null,
-                    };
-                    if (item?.image?.fileUrl) {
-                      setLoading(true);
-                      await DeleteImageApi(
-                        tokenStore,
-                        item?.image?.id,
-                      )
-                        .then((res: any) => {
-                          if (res?.status == 200) {
-                            setLoading(false);
-                          }
-                        })
-                        .catch(error => {
-                          console.log(error);
-                        });
-                    }
-                    setProgressiveServiceClosings(eachValue);
-                  }}
-                />
+                
               </TouchableOpacity>
             ) : (
               <ButtonComponent
@@ -410,7 +318,6 @@ const ConfirmInvoiceClosing = () => {
                 styleIcon={styles.addImageIcon}
                 onPress={() => {
                   setIndexValue(index);
-                  renderActionSheet();
                 }}
               />
             )}
@@ -463,7 +370,7 @@ const ConfirmInvoiceClosing = () => {
       <AppBarComponent
         iconLeft={icons.ic_back}
         pressIconLeft={() => navigation.goBack()}
-        label={'Chốt dịch vụ'}
+        label={'Dịch vụ đã chốt'}
       />
 
       <ScrollView
@@ -532,7 +439,7 @@ const ConfirmInvoiceClosing = () => {
               <FlatList
                 data={progressiveServiceClosings}
                 keyExtractor={key => key?.id}
-                renderItem={({item, index}) => renderItem(item,index)}
+                renderItem={({item, index}) => renderItem(item,index)} 
               />
             )}
           </ScrollView>
@@ -610,12 +517,6 @@ const styles = StyleSheet.create({
     marginRight: 5,
     tintColor: colors.mainColor,
   },
-  buttonDeleteImage: {
-    position: 'absolute',
-    top: 5,
-    right: 5,
-    zIndex: 1,
-  },
   styleLabelLeft: {
     color: colors.backgroundOrange,
     fontSize: 15,
@@ -652,7 +553,7 @@ const styles = StyleSheet.create({
   labelBold: {color: 'black', fontWeight: '600', fontSize: 11},
   labelNomal: {color: 'black', fontWeight: '300', fontSize: 11},
 });
-export default ConfirmInvoiceClosing;
+export default InvoiceClosing;
 
 const ModalshowImage = (props: any) => {
   const {modalVisible, onRequestClose, data, pressClose} = props;

@@ -37,6 +37,7 @@ import {
   ConfirmInvoiceClosing,
   InvoiceUnpaidDetail,
   InvoicePaidDetail,
+  InvoiceClosing,
   CheckInvoice,
   InvoiceManager,
   ServiceManager,
@@ -363,6 +364,13 @@ const StackHomeNavigator = () => {
       <Stack.Screen
         component={InvoiceUnpaidDetail}
         name={'InvoiceUnpaidDetail'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={InvoiceClosing}
+        name={'InvoiceClosing'}
         options={{
           headerShown: false,
         }}

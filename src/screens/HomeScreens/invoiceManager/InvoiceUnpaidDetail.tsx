@@ -37,6 +37,7 @@ import {
   DeleteImageApi,
   PostImageInvoiceUploadPaymentApi,
 } from '../../../apis/homeApi/fileDataApi';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 const InvoiceUnpaidDetail = () => {
   const route = useRoute();
@@ -72,27 +73,52 @@ const InvoiceUnpaidDetail = () => {
     getData();
   }, []);
 
+  const {showActionSheetWithOptions} = useActionSheet();
+
+  const renderActionSheet = () => {
+    const options = ['Camera', 'Library', 'Cancel'];
+    const destructiveButtonIndex = 2;
+    const cancelButtonIndex = 2;
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        switch (selectedIndex) {
+          case 0:
+             openCamera();
+            break;
+          case 1:
+             openGallery();
+            break;
+          case 2:
+            break;
+        }
+      },
+    );
+  };
+
   const openCamera = () => {
-    setModalCamera(false);
     onOpenCamera().then((image:any) => {
       let eachImg = {...image[0]};
       const eachResult = [...paymentImages, eachImg];
       setPaymentImages(eachResult);
     })
     .catch(e => {
-      setModalCamera(false);
+      console.log(e);
     });
   };
 
   const openGallery = () => {
-    setModalCamera(false);
     onOpenLibrary().then(async (image:any) => {
       let eachImg = {...image[0]};
       const eachResult = [...paymentImages, eachImg];
       setPaymentImages(eachResult);
     })
     .catch(e => {
-      setModalCamera(false);
+      console.log(e);
     });
   };
   const renderItem = (item: any, index: number) => {
@@ -198,15 +224,6 @@ const InvoiceUnpaidDetail = () => {
           label={'Bạn có muốn từ chối phiếu thanh toán này ?'}
           onRequestClose={() => setModalRejectTheBill(false)}
           pressConfirm={() => rejectTheBill()}
-        />
-      )}
-      {modalCamera && (
-        <CustomModalCamera
-          openCamera={() => openCamera()}
-          openGallery={() => openGallery()}
-          modalVisible={modalCamera}
-          onRequestClose={() => setModalCamera(false)}
-          cancel={() => setModalCamera(false)}
         />
       )}
       {modalDeleteInvoice && (
@@ -333,7 +350,7 @@ const InvoiceUnpaidDetail = () => {
           labelUpload={'Thêm ảnh'}
           data={paymentImages}
           deleteButton={true}
-          openModal={() => setModalCamera(true)}
+          openModal={() => renderActionSheet()}
           deleteItem={async (item: any) => {
             let result = [...paymentImages];
             let newResult = result.filter(itemResult => itemResult !== item);

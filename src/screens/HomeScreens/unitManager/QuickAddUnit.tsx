@@ -8,7 +8,6 @@ import RenderService from '../../../components/renderComponent/RenderService';
 import RenderAmenity from '../../../components/renderComponent/RenderAmenity';
 import TextTitleComponent from '../../../components/commonComponent/TextTitleComponent';
 import CustomTwoButtonBottom from '../../../components/commonComponent/CustomTwoButtonBottom';
-import CustomModalCamera from '../../../components/commonComponent/CustomModalCamera';
 import LoadingComponent from '../../../components/commonComponent/LoadingComponent';
 import SuggestComponent from '../../../components/commonComponent/SuggestComponent';
 import {useDispatch, useSelector} from 'react-redux';
@@ -43,7 +42,6 @@ const QuickAddUnit = () => {
 
   const [loadingRoom, setLoadingRoom] = useState(true);
   const [modalAddRoom, setModalAddRoom] = useState(false);
-  const [modalCamera, setModalCamera] = useState(false);
   const [modalUnitType, setModalUnitType] = useState(false);
 
   const [unitImages, setUnitImages] = useState<any>([]);
