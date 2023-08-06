@@ -32,7 +32,6 @@ import {
 } from '../../../components/commonComponent/LineConponent';
 import CustomViewServiceFee from '../../../components/homeComponent/CustomViewServiceFee';
 import ComponentRenderImage from '../../../components/renderComponent/ComponentRenderImage';
-import CustomModalCamera from '../../../components/commonComponent/CustomModalCamera';
 import {
   DeleteImageApi,
   PostImageInvoiceUploadPaymentApi,
