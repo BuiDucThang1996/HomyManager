@@ -64,8 +64,19 @@ const ContractDetail = () => {
   };
 
   const renderListAcmenity = (item: any, index: any) => {
-    return <RenderAmenity label={item?.name} />;
+    return <RenderAmenity label={item?.name} onPress={() => navigation.navigate('AmenityDetail', item?.id)} />;
   };
+
+const renderTenants = (item:any,index:number)=>{
+  return (
+    <CustomPersonInfor
+      avatar={item?.avatarImage?.fileUrl}
+      userName={item?.fullName}
+      phoneNumber={item?.phoneNumber}
+      pressAvatar={()=>navigation.navigate('TenantDetail',item?.id)}
+    />
+  );
+}
 
   return (
     <View style={styles.container}>
@@ -157,15 +168,7 @@ const ContractDetail = () => {
               <FlatList
                 data={contract?.tenants}
                 keyExtractor={key => key?.id}
-                renderItem={({item, index}) => {
-                  return (
-                    <CustomPersonInfor
-                      avatar={item?.avatarImage?.fileUrl}
-                      userName={item?.fullName}
-                      phoneNumber={item?.phoneNumber}
-                    />
-                  );
-                }}
+                renderItem={({item, index}) => renderTenants(item,index)}
               />
             )}
           </ScrollView>

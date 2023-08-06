@@ -107,6 +107,7 @@ const QuickAddUnit = () => {
   const renderPaidSevice = (item: any, index: any) => {
     return (
       <RenderService
+      disabled={true}
         name={item?.name}
         fee={item?.fee}
         calculateUnit={item?.calculateUnit}
@@ -115,7 +116,7 @@ const QuickAddUnit = () => {
   };
 
   const renderFreeSevice = (item: any, index: any) => {
-    return <RenderAmenity label={item?.name} />;
+    return <RenderAmenity label={item?.name} disabled={true} />;
   };
 
   const openCamera = () => {

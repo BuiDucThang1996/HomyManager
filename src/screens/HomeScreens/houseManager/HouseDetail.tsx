@@ -27,11 +27,14 @@ import RenderImage from '../../../components/renderComponent/RenderImage';
 import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../store/slices/tokenSlice';
 import CustomBankAccountInfor from '../../../components/commonComponent/CustomBankAccountInfor';
-import {reloadState, updateReloadStatus} from '../../../store/slices/reloadSlice';
+import {
+  reloadState,
+  updateReloadStatus,
+} from '../../../store/slices/reloadSlice';
 
 const HouseDetail = () => {
   const navigation: any = useNavigation();
-  const reload = useSelector(reloadState)
+  const reload = useSelector(reloadState);
   const dispatch = useDispatch();
   const route = useRoute();
   const tokenStore = useSelector(token);
@@ -42,7 +45,7 @@ const HouseDetail = () => {
   const [modalDeleteHouse, setModalDeleteHouse] = useState(false);
   const hauseId: any = route.params;
   // console.log(hauseInfor);
-  
+
   useEffect(() => {
     getDataHause();
   }, [reload]);
@@ -65,7 +68,7 @@ const HouseDetail = () => {
   const renderSevices = (item: any, index: number) => {
     return (
       <RenderService
-        disabled={true}
+        onPress={() => navigation.navigate('ServiceDetail', item?.id)}
         name={item?.name}
         fee={item?.fee}
         icon={item?.icon}
@@ -75,7 +78,12 @@ const HouseDetail = () => {
   };
 
   const renderAmenitys = (item: any, index: any) => {
-    return <RenderAmenity disabled={true} label={item?.name} />;
+    return (
+      <RenderAmenity
+        onPress={() => navigation.navigate('AmenityDetail', item?.id)}
+        label={item?.name}
+      />
+    );
   };
 
   const renderImageHauses = (item: any, index: any) => {
@@ -96,6 +104,7 @@ const HouseDetail = () => {
         console.log(error);
       });
   };
+  
   return (
     <View style={styles.container}>
       {loading && (
@@ -139,7 +148,9 @@ const HouseDetail = () => {
             icon={icons.ic_key}
             styleImageBG={{tintColor: '#ff8d37'}}
             styleBGIcon={{backgroundColor: '#fff3e9'}}
-            onPress={() => navigation.navigate('EmptyUnitManager', hauseInfor?.id)}
+            onPress={() =>
+              navigation.navigate('EmptyUnitManager', hauseInfor?.id)
+            }
           />
           <CustomOptionBT
             title={'Người'}
@@ -163,8 +174,8 @@ const HouseDetail = () => {
           label={'Thông tin tòa nhà'}
           labelButton={'Chỉnh sửa'}
           onPress={() => {
-            dispatch(updateReloadStatus('updateHouseInfor'))
-            navigation.navigate('EditHouseInformation', hauseId)
+            dispatch(updateReloadStatus('updateHouseInfor'));
+            navigation.navigate('EditHouseInformation', hauseId);
           }}
         />
         <View style={[styles.viewRow, {marginBottom: 10}]}>
@@ -201,7 +212,7 @@ const HouseDetail = () => {
           userName={hauseInfor?.bankAccount?.name}
           accountNo={hauseInfor?.bankAccount?.notice}
           pressDetail={() =>
-            navigation.navigate('PaymentDetail', hauseInfor?.bankAccount?.id)
+            navigation.navigate('BankAccountDetal', hauseInfor?.bankAccount?.id)
           }
         />
         {StraightLine()}

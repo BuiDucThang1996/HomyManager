@@ -157,6 +157,7 @@ const EditContractInfor = () => {
   const renderSelectTenant = (item: any, index: number) => {
     return (
       <CustomPersonInfor
+      disabled={true}
         styleView={{marginBottom: 10}}
         userName={`${item?.fullName}`}
         phoneNumber={`${item?.phoneNumber}`}
@@ -187,7 +188,7 @@ const EditContractInfor = () => {
   };
 
   const renderSelectAmenity = (item: any, index: number) => {
-    return <RenderAmenity label={item?.name} />;
+    return <RenderAmenity label={item?.name} disabled={true} />;
   };
   const openCamera = () => {
     setModalCamera(false);

@@ -149,6 +149,7 @@ const AddNewHouseStep2 = (props: any) => {
         />
         {bank && (
           <CustomBankAccountInfor
+          disabledDetail={true}
             viewCustom={{marginBottom: 10}}
             imageUrl={bank?.bank?.logo}
             userName={bank?.name}

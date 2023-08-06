@@ -19,6 +19,7 @@ const CustomPersonInfor = (props: any) => {
     isCheck,
     onPressCheck,
     pressAvatar,
+    disabled,
   } = props;
 
   return (
@@ -32,6 +33,7 @@ const CustomPersonInfor = (props: any) => {
           />
         )}
         <TouchableOpacity
+          disabled={disabled}
           style={{flexDirection: 'row', alignItems: 'center'}}
           onPress={pressAvatar}>
           <Image

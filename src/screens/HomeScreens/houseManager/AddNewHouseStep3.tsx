@@ -76,6 +76,7 @@ const AddNewHouseStep3 = () => {
   const renderPaidSevice = (item: any, index: number) => {
     return (
       <RenderService
+        disabled={true}
         name={item?.name}
         fee={item?.fee}
         calculateUnit={item?.calculateUnit}
@@ -84,7 +85,7 @@ const AddNewHouseStep3 = () => {
   };
 
   const renderFreeSevice = (item: any, index: number) => {
-    return <RenderAmenity label={item?.name} />;
+    return <RenderAmenity label={item?.name} disabled={true} />;
   };
 
   const createNewBuilding = async () => {

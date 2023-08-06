@@ -30,7 +30,12 @@ import {
   PostImageUnitApi,
 } from '../../../apis/homeApi/fileDataApi';
 import ComponentInput from '../../../components/commonComponent/ComponentInput';
-import {formatNumber, onOpenCamera, onOpenLibrary, validateNumber} from '../../../utils/common';
+import {
+  formatNumber,
+  onOpenCamera,
+  onOpenLibrary,
+  validateNumber,
+} from '../../../utils/common';
 import ComponentButton from '../../../components/commonComponent/ComponentButton';
 import {StraightLine} from '../../../components/commonComponent/LineConponent';
 import ComponentRenderImage from '../../../components/renderComponent/ComponentRenderImage';
@@ -112,6 +117,7 @@ const EditUnitInfor = () => {
   const renderPaidSevice = (item: any, index: any) => {
     return (
       <RenderService
+        disabled={true}
         name={item?.name}
         fee={item?.fee}
         calculateUnit={item?.calculateUnit}
@@ -120,38 +126,40 @@ const EditUnitInfor = () => {
   };
 
   const renderFreeSevice = (item: any, index: any) => {
-    return <RenderAmenity label={item?.name} />;
+    return <RenderAmenity label={item?.name} disabled={true} />;
   };
 
   const openCamera = () => {
     setModalCamera(false);
-    onOpenCamera().then((image:any) => {
-      let eachImg = {...image[0]};
-      let eachUnitImage: any = [...unitImages, eachImg];
-      setUnitImages(eachUnitImage);
-      let eachImages = [...unit?.images, eachImg];
-      const eachResult = {...unit, images: eachImages};
-      setUnit(eachResult);
-    })
-    .catch(e => {
-      setModalCamera(false);
-    });
+    onOpenCamera()
+      .then((image: any) => {
+        let eachImg = {...image[0]};
+        let eachUnitImage: any = [...unitImages, eachImg];
+        setUnitImages(eachUnitImage);
+        let eachImages = [...unit?.images, eachImg];
+        const eachResult = {...unit, images: eachImages};
+        setUnit(eachResult);
+      })
+      .catch(e => {
+        setModalCamera(false);
+      });
   };
 
   const openGallery = () => {
     setModalCamera(false);
-    onOpenLibrary().then(async (image:any) => {
-      let eachImages = [...unit?.images];
-      const newResult = eachImages.concat(image);
-      const eachResult = {...unit, images: newResult};
-      setUnit(eachResult);
-      let eachUnitImages = [...unitImages];
-      const newResultImages = eachUnitImages.concat(image);
-      setUnitImages(newResultImages);
-    })
-    .catch(e => {
-      setModalCamera(false);
-    });
+    onOpenLibrary()
+      .then(async (image: any) => {
+        let eachImages = [...unit?.images];
+        const newResult = eachImages.concat(image);
+        const eachResult = {...unit, images: newResult};
+        setUnit(eachResult);
+        let eachUnitImages = [...unitImages];
+        const newResultImages = eachUnitImages.concat(image);
+        setUnitImages(newResultImages);
+      })
+      .catch(e => {
+        setModalCamera(false);
+      });
   };
 
   const deleteImage = async (imageId: any) => {

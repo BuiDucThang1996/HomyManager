@@ -494,6 +494,7 @@ const EditHouseInformation = () => {
         />
         {hause?.bankAccount && (
           <CustomBankAccountInfor
+          disabledDetail={true}
             viewCustom={{marginBottom: 10}}
             imageUrl={hause?.bankAccount?.bank?.logo}
             userName={hause?.bankAccount?.name}
