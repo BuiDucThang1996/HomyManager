@@ -6080,7 +6080,7 @@ react-native-device-info@^10.8.0:
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-10.8.0.tgz#c331c94d65542f86bac197f223ee064c7e10a9ec"
   integrity sha512-DE4/X82ZVhdcnR1Y21iTP46WSSJA/rHK3lmeqWfGGq1RKLwXTIdxmfbZZnYwryqJ+esrw2l4ND19qlgxDGby8A==
 
-react-native-gesture-handler@^2.12.1:
+react-native-gesture-handler@2.12.1:
   version "2.12.1"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.12.1.tgz#f11a99fb95169810c6886fad5efa01a17fd81660"
   integrity sha512-deqh36bw82CFUV9EC4tTo2PP1i9HfCOORGS3Zmv71UYhEZEHkzZv18IZNPB+2Awzj45vLIidZxGYGFxHlDSQ5A==
@@ -6096,7 +6096,7 @@ react-native-image-picker@5.0.2:
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-5.0.2.tgz#f7071893df36fd40dec996040e3dfb4e58b4d93a"
   integrity sha512-kl5g22TEiOkHcwKFh+BjdBYb+7LTq0yKXZCjgXCPoHbq7QwckgR4mFASPPoX2RUKGFy6cYqJGc0IX+xpqcSX5w==
 
-react-native-reanimated@^3.4.2:
+react-native-reanimated@3.4.2:
   version "3.4.2"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.4.2.tgz#744154fead6d8d31d5bd9ac617d8c84d74a6f697"
   integrity sha512-FbtG+f1PB005vDTJSv4zAnTK7nNXi+FjFgbAM5gOzIZDajfph2BFMSUstzIsN8T77+OKuugUBmcTqLnQ24EBVg==
