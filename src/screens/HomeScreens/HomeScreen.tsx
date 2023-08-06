@@ -46,9 +46,9 @@ const HomeScreen = () => {
   // console.log(tokenStore);
   useEffect(() => {
     getData();
-    requestUserPermission();
-    NotificationServices();
-    registerNotification();
+    // requestUserPermission();
+    // NotificationServices();
+    // registerNotification();
   }, [reload]);
 
   const getData = async () => {

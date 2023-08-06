@@ -101,20 +101,22 @@ export const removeDuplicateElements = (arrayService: any) => {
 
 export const onOpenCamera = () => {
   return new Promise(async (resolve, reject) => {
-    await launchCamera({
-      mediaType: 'photo',
-      maxWidth: 1920,
-      maxHeight: 1080,
-      quality: 0.8,
-    })
-      .then(async (res: any) => {
-        let listPhoto: any[] = [];
-        listPhoto.push(res?.assets[0]);
-        resolve(listPhoto);
+    setTimeout(async()=>{
+      await launchCamera({
+        mediaType: 'photo',
+        maxWidth: 1920,
+        maxHeight: 1080,
+        quality: 0.8,
       })
-      .catch(error => {
-        reject(error);
-      });
+        .then(async (res: any) => {
+          let listPhoto: any[] = [];
+          listPhoto.push(res?.assets[0]);
+          resolve(listPhoto);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    },500)
   });
 };
 
