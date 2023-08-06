@@ -117,7 +117,7 @@ export const onOpenCamera = () => {
         .catch(error => {
           reject(error);
         });
-    },500)
+    },300)
   });
 };
 
