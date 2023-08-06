@@ -4,7 +4,6 @@ import {StyleSheet, View, Alert, ScrollView} from 'react-native';
 import CustomModalDateTimePicker from '../../../components/commonComponent/CustomModalDateTimePicker';
 import CustomTwoButtonBottom from '../../../components/commonComponent/CustomTwoButtonBottom';
 import {icons, colors} from '../../../constants';
-import CustomModalCamera from '../../../components/commonComponent/CustomModalCamera';
 import CustomTimeButtons from '../../../components/commonComponent/CustomTimeButtons';
 import CustomStepAppBar from '../../../components/appBarComponent/CustomStepAppBar';
 import TextTitleComponent from '../../../components/commonComponent/TextTitleComponent';
@@ -25,6 +24,7 @@ import ComponentButton from '../../../components/commonComponent/ComponentButton
 import ComponentRenderImage from '../../../components/renderComponent/ComponentRenderImage';
 import {updateReloadStatus} from '../../../store/slices/reloadSlice';
 import BottomSheetPicker from '../../../components/commonComponent/BottomSheetPicker';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 const AddNewHouseStep1 = (props: any) => {
   const navigation: any = useNavigation();
@@ -55,7 +55,6 @@ const AddNewHouseStep1 = (props: any) => {
   const [closeTimeValue, setCloseTimeValue] = useState('23:00:00');
   const [modalopenTime, setModalopenTime] = useState(false);
   const [modalcloseTime, setModalcloseTime] = useState(false);
-  const [modalCamera, setModalCamera] = useState(false);
   const [modalCity, setModalCity] = useState(false);
   const [modalDistrict, setModalDistrict] = useState(false);
   const [modalWard, setModalWard] = useState(false);
@@ -113,29 +112,52 @@ const AddNewHouseStep1 = (props: any) => {
       })
       .catch(error => console.log(error));
   };
+  const {showActionSheetWithOptions} = useActionSheet();
 
+  const renderActionSheet = () => {
+    const options = ['Camera', 'Library', 'Cancel'];
+    const destructiveButtonIndex = 2;
+    const cancelButtonIndex = 2;
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        switch (selectedIndex) {
+          case 0:
+            openCamera();
+            break;
+          case 1:
+             openGallery();
+            break;
+          case 2:
+            break;
+        }
+      },
+    );
+  };
   const openCamera = () => {
-    setModalCamera(false);
     onOpenCamera().then((image:any) => {
       let eachImg = {...image[0]};
       const eachResult = [...hauseImages, eachImg];
       setHauseImages(eachResult);
     })
     .catch(e => {
-      setModalCamera(false);
+      console.log(e);
     });
    
   };
 
   const openGallery = () => {
-    setModalCamera(false);
     onOpenLibrary().then(async image => {
       const eachResult = [...hauseImages];
       const newResult = eachResult.concat(image);
       setHauseImages(newResult);
     })
     .catch(e => {
-      setModalCamera(false);
+      console.log(e);
     });
     
   };
@@ -169,15 +191,6 @@ const AddNewHouseStep1 = (props: any) => {
   return (
     <View style={styles.container}>
       {loading && <LoadingComponent />}
-      {modalCamera && (
-        <CustomModalCamera
-          openCamera={() => openCamera()}
-          openGallery={() => openGallery()}
-          modalVisible={modalCamera}
-          onRequestClose={() => setModalCamera(false)}
-          cancel={() => setModalCamera(false)}
-        />
-      )}
       {modalopenTime && (
         <CustomModalDateTimePicker
           onCancel={() => setModalopenTime(false)}
@@ -370,7 +383,7 @@ const AddNewHouseStep1 = (props: any) => {
           labelUpload={'Tải lên ảnh tòa nhà'}
           data={hauseImages}
           deleteButton={true}
-          openModal={() => setModalCamera(true)}
+          openModal={() => renderActionSheet()}
           deleteItem={(item: any) => {
             let result = [...hauseImages];
             let newResult = result.filter(itemResult => itemResult !== item);

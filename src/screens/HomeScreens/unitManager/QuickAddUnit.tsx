@@ -29,6 +29,7 @@ import ComponentButton from '../../../components/commonComponent/ComponentButton
 import {formatNumber, onOpenCamera, onOpenLibrary, validateNumber} from '../../../utils/common';
 import ComponentRenderImage from '../../../components/renderComponent/ComponentRenderImage';
 import {StraightLine} from '../../../components/commonComponent/LineConponent';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 const QuickAddUnit = () => {
   const navigation: any = useNavigation();
@@ -119,27 +120,52 @@ const QuickAddUnit = () => {
     return <RenderAmenity label={item?.name} disabled={true} />;
   };
 
+  const {showActionSheetWithOptions} = useActionSheet();
+
+  const renderActionSheet = () => {
+    const options = ['Camera', 'Library', 'Cancel'];
+    const destructiveButtonIndex = 2;
+    const cancelButtonIndex = 2;
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        switch (selectedIndex) {
+          case 0:
+             openCamera();
+            break;
+          case 1:
+            openGallery();
+            break;
+          case 2:
+            break;
+        }
+      },
+    );
+  };
+
   const openCamera = () => {
-    setModalCamera(false);
     onOpenCamera().then((image:any) => {
       let eachImg = {...image[0]};
       const eachResult = [...unitImages, eachImg];
       setUnitImages(eachResult);
     })
     .catch(e => {
-      setModalCamera(false);
+      console.log(e);
     });
   };
 
   const openGallery = () => {
-    setModalCamera(false);
     onOpenLibrary().then(async (image:any) => {
       const eachResult = [...unitImages];
       const newResult = eachResult.concat(image);
       setUnitImages(newResult);
     })
     .catch(e => {
-      setModalCamera(false);
+      console.log(e);
     });
   };
 
@@ -211,15 +237,6 @@ const QuickAddUnit = () => {
             setUnit(eachUnit);
             setModalUnitType(false);
           }}
-        />
-      )}
-      {modalCamera && (
-        <CustomModalCamera
-          openCamera={() => openCamera()}
-          openGallery={() => openGallery()}
-          modalVisible={modalCamera}
-          onRequestClose={() => setModalCamera(false)}
-          cancel={() => setModalCamera(false)}
         />
       )}
       <AppBarComponent
@@ -418,7 +435,7 @@ const QuickAddUnit = () => {
             labelUpload={'Tải lên ảnh phòng'}
             data={unitImages}
             deleteButton={true}
-            openModal={() => setModalCamera(true)}
+            openModal={() => renderActionSheet()}
             deleteItem={(item: any) => {
               let result = [...unitImages];
               let newResult = result.filter(itemResult => itemResult !== item);

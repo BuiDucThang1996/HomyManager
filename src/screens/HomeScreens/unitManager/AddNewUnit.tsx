@@ -8,7 +8,6 @@ import RenderService from '../../../components/renderComponent/RenderService';
 import RenderAmenity from '../../../components/renderComponent/RenderAmenity';
 import TextTitleComponent from '../../../components/commonComponent/TextTitleComponent';
 import CustomTwoButtonBottom from '../../../components/commonComponent/CustomTwoButtonBottom';
-import CustomModalCamera from '../../../components/commonComponent/CustomModalCamera';
 import {StraightLine} from '../../../components/commonComponent/LineConponent';
 import CustomLoading from '../../../components/commonComponent/LoadingComponent';
 import {useDispatch, useSelector} from 'react-redux';
@@ -28,6 +27,7 @@ import ComponentButton from '../../../components/commonComponent/ComponentButton
 import ComponentRenderImage from '../../../components/renderComponent/ComponentRenderImage';
 import SuggestComponent from '../../../components/commonComponent/SuggestComponent';
 import {GetListHausesApi, HauseDetailApi} from '../../../apis/homeApi/houseApi';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 const AddNewUnit = () => {
   const navigation: any = useNavigation();
@@ -53,7 +53,6 @@ const AddNewUnit = () => {
 
   const [loadingRoom, setLoadingRoom] = useState(true);
   const [modalAddRoom, setModalAddRoom] = useState(false);
-  const [modalCamera, setModalCamera] = useState(false);
   const [modalUnitType, setModalUnitType] = useState(false);
 
   useEffect(() => {
@@ -97,6 +96,7 @@ const AddNewUnit = () => {
   const renderPaidSevice = (item: any, index: any) => {
     return (
       <RenderService
+      disabled={true}
         name={item?.name}
         fee={`${item?.fee}`}
         calculateUnit={item?.calculateUnit}
@@ -105,30 +105,55 @@ const AddNewUnit = () => {
   };
 
   const renderFreeSevice = (item: any, index: any) => {
-    return <RenderAmenity label={item?.name} />;
+    return <RenderAmenity label={item?.name} disabled={true} />;
+  };
+
+  const {showActionSheetWithOptions} = useActionSheet();
+
+  const renderActionSheet = () => {
+    const options = ['Camera', 'Library', 'Cancel'];
+    const destructiveButtonIndex = 2;
+    const cancelButtonIndex = 2;
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        switch (selectedIndex) {
+          case 0:
+            openCamera();
+            break;
+          case 1:
+             openGallery();
+            break;
+          case 2:
+            break;
+        }
+      },
+    );
   };
 
   const openCamera = () => {
-    setModalCamera(false);
     onOpenCamera().then((image:any) => {
       let eachImg = {...image[0]};
       const eachResult = [...unitImages, eachImg];
       setUnitImages(eachResult);
     })
     .catch(e => {
-      setModalCamera(false);
+      console.log(e);
     });
   };
 
   const openGallery = () => {
-    setModalCamera(false);
     onOpenLibrary().then(async (image:any) => {
       const eachResult = [...unitImages];
       const newResult = eachResult.concat(image);
       setUnitImages(newResult);
     })
     .catch(e => {
-      setModalCamera(false);
+      console.log(e);
     });
   };
 
@@ -216,15 +241,6 @@ const AddNewUnit = () => {
             setRoomType(item?.key);
             setModalUnitType(false);
           }}
-        />
-      )}
-      {modalCamera && (
-        <CustomModalCamera
-          openCamera={() => openCamera()}
-          openGallery={() => openGallery()}
-          modalVisible={modalCamera}
-          onRequestClose={() => setModalCamera(false)}
-          cancel={() => setModalCamera(false)}
         />
       )}
       <AppBarComponent
@@ -401,7 +417,7 @@ const AddNewUnit = () => {
           labelUpload={'Tải lên ảnh phòng'}
           data={unitImages}
           deleteButton={true}
-          openModal={() => setModalCamera(true)}
+          openModal={() => renderActionSheet()}
           deleteItem={(item: any) => {
             let result = [...unitImages];
             let newResult = result.filter(itemResult => itemResult !== item);

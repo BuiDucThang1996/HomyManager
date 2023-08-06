@@ -12,6 +12,7 @@ import {Provider} from 'react-redux';
 import {store} from './src/store/store';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import MainNavigator from './src/navigations/MainNavigator';
+import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -21,21 +22,23 @@ const App = () => {
   };
 
   return (
-    <SafeAreaView style={[backgroundStyle, styles.container]}>
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <StatusBar
-          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-          backgroundColor={backgroundStyle.backgroundColor}
-        />
-        <Provider store={store}>
-          <GestureHandlerRootView style={styles.container}>
-            <NavigationContainer>
-              <MainNavigator />
-            </NavigationContainer>
-          </GestureHandlerRootView>
-        </Provider>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+    <ActionSheetProvider>
+      <SafeAreaView style={[backgroundStyle, styles.container]}>
+        <KeyboardAvoidingView style={{flex: 1}}>
+          <StatusBar
+            barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+            backgroundColor={backgroundStyle.backgroundColor}
+          />
+          <Provider store={store}>
+            <GestureHandlerRootView style={styles.container}>
+              <NavigationContainer>
+                <MainNavigator />
+              </NavigationContainer>
+            </GestureHandlerRootView>
+          </Provider>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </ActionSheetProvider>
   );
 };
 

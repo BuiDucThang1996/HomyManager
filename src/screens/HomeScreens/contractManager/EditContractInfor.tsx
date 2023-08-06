@@ -42,13 +42,13 @@ import {tenantState} from '../../../store/slices/tenantSlice';
 import CustomModalDateTimePicker from '../../../components/commonComponent/CustomModalDateTimePicker';
 import {PAYMENTDURATION} from '../../../resource/dataPicker';
 import CustomPickerDay from '../../../components/commonComponent/CustomPickerDay';
-import CustomModalCamera from '../../../components/commonComponent/CustomModalCamera';
 import {
   DeleteImageApi,
   PostImageContractApi,
 } from '../../../apis/homeApi/fileDataApi';
 import CustomModalNotify from '../../../components/commonComponent/CustomModalNotify';
 import {updateReloadStatus} from '../../../store/slices/reloadSlice';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 const EditContractInfor = () => {
   const navigation: any = useNavigation();
@@ -68,7 +68,6 @@ const EditContractInfor = () => {
   const [modalEndDate, setModalEndDate] = useState(false);
   const [modalStartChargeDate, setModalStartChargeDate] = useState(false);
   const [modalPaymentDuration, setModalPaymentDuration] = useState(false);
-  const [modalCamera, setModalCamera] = useState(false);
   const [modalEditContract, setModalEditContract] = useState(false);
 
   const [contractImages, setContractImages] = useState([]);
@@ -190,27 +189,51 @@ const EditContractInfor = () => {
   const renderSelectAmenity = (item: any, index: number) => {
     return <RenderAmenity label={item?.name} disabled={true} />;
   };
+  const {showActionSheetWithOptions} = useActionSheet();
+
+  const renderActionSheet = () => {
+    const options = ['Camera', 'Library', 'Cancel'];
+    const destructiveButtonIndex = 2;
+    const cancelButtonIndex = 2;
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        switch (selectedIndex) {
+          case 0:
+            openCamera();
+            break;
+          case 1:
+             openGallery();
+            break;
+          case 2:
+            break;
+        }
+      },
+    );
+  };
   const openCamera = () => {
-    setModalCamera(false);
     onOpenCamera().then((image:any) => {
       let eachImg = {...image[0]};
       const eachResult: any = [...contractImages, eachImg];
       setContractImages(eachResult);
     })
     .catch(e => {
-      setModalCamera(false);
+      console.log(e);
     });
   };
 
   const openGallery = () => {
-    setModalCamera(false);
     onOpenLibrary().then(async (image:any) => {
       const eachResult = [...contractImages];
       const newResult = eachResult.concat(image);
       setContractImages(newResult);
     })
     .catch(e => {
-      setModalCamera(false);
+      console.log(e);
     });
   };
 
@@ -421,15 +444,7 @@ const EditContractInfor = () => {
           }}
         />
       )}
-      {modalCamera && (
-        <CustomModalCamera
-          openCamera={() => openCamera()}
-          openGallery={() => openGallery()}
-          modalVisible={modalCamera}
-          onRequestClose={() => setModalCamera(false)}
-          cancel={() => setModalCamera(false)}
-        />
-      )}
+    
       <AppBarComponent
         iconLeft={icons.ic_back}
         label={'Chỉnh sửa hợp đồng'}
@@ -619,7 +634,7 @@ const EditContractInfor = () => {
           labelUpload={'Thêm ảnh'}
           data={contractImages}
           deleteButton={true}
-          openModal={() => setModalCamera(true)}
+          openModal={() => renderActionSheet()}
           deleteItem={(item: any) => deleteImage(item)}
         />
         <View style={{height: 56}} />

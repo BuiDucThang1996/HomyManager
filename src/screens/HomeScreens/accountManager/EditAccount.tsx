@@ -14,7 +14,6 @@ import ButtonComponent from '../../../components/commonComponent/ButtonComponent
 import TextTitleComponent from '../../../components/commonComponent/TextTitleComponent';
 import CustomModalNotify from '../../../components/commonComponent/CustomModalNotify';
 import {colors, icons, images} from '../../../constants';
-import CustomModalCamera from '../../../components/commonComponent/CustomModalCamera';
 import LoadingComponent from '../../../components/commonComponent/LoadingComponent';
 import CustomModalDateTimePicker from '../../../components/commonComponent/CustomModalDateTimePicker';
 import {
@@ -35,6 +34,7 @@ import {updateReloadStatus} from '../../../store/slices/reloadSlice';
 import ComponentInput from '../../../components/commonComponent/ComponentInput';
 import ComponentButton from '../../../components/commonComponent/ComponentButton';
 import ComponentRenderImage from '../../../components/renderComponent/ComponentRenderImage';
+import {useActionSheet} from '@expo/react-native-action-sheet';
 
 const EditAccount = () => {
   const dispatch = useDispatch();
@@ -45,8 +45,6 @@ const EditAccount = () => {
   const [identityIssueDate, setIdentityIssueDate] = useState(new Date());
   const [albumImage, setAlbumImage] = useState<any>([]);
   const [loading, setLoading] = useState(true);
-  const [modalCamera, setModalCamera] = useState(false);
-  const [modalCameraAvatar, setModalCameraAvatar] = useState(false);
   const [modalBirthDay, setModalBirthDay] = useState(false);
   const [modaSaveAccount, setModaSaveAccount] = useState(false);
   const [modalIdentityIssueDate, setModalIdentityIssueDate] = useState(false);
@@ -66,10 +64,35 @@ const EditAccount = () => {
       })
       .catch(error => console.log(error));
   };
+  const {showActionSheetWithOptions} = useActionSheet();
+
+  const renderActionSheet = (isPressAvatar:boolean) => {
+    const options = ['Camera', 'Library', 'Cancel'];
+    const destructiveButtonIndex = 2;
+    const cancelButtonIndex = 2;
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        switch (selectedIndex) {
+          case 0:
+            !isPressAvatar ? openCameraAvatar() : openCamera();
+            break;
+          case 1:
+            !isPressAvatar ? openGalleryAvatar() : openGallery();
+            break;
+          case 2:
+            break;
+        }
+      },
+    );
+  };
 
   const openCameraAvatar = () => {
     const avatarId = user?.avatarImage?.id;
-    setModalCameraAvatar(false);
     onOpenCamera()
       .then(async (avatarImage: any) => {
         if (avatarId) {
@@ -81,13 +104,12 @@ const EditAccount = () => {
         }
       })
       .catch(e => {
-        setModalCameraAvatar(false);
+        console.log(e);
       });
   };
 
   const openGalleryAvatar = () => {
     const avatarId = user?.avatarImage?.id;
-    setModalCameraAvatar(false);
     onOpenLibrary()
       .then(async (image: any) => {
         let eachImg = {...image};
@@ -101,7 +123,7 @@ const EditAccount = () => {
         }
       })
       .catch(e => {
-        setModalCameraAvatar(false);
+        console.log(e);
       });
   };
 
@@ -120,7 +142,6 @@ const EditAccount = () => {
   };
 
   const openCamera = () => {
-    setModalCamera(false);
     onOpenCamera()
       .then((image: any) => {
         let eachImg = {...image[0]};
@@ -131,12 +152,11 @@ const EditAccount = () => {
         setUser(newUser);
       })
       .catch(e => {
-        setModalCamera(false);
+        console.log(e);
       });
   };
 
   const openGallery = () => {
-    setModalCamera(false);
     onOpenLibrary()
       .then(async (image: any) => {
         let eachAlbumImg = [...albumImage];
@@ -148,7 +168,7 @@ const EditAccount = () => {
         setUser(newUser);
       })
       .catch(e => {
-        setModalCamera(false);
+        console.log(e);
       });
   };
 
@@ -221,24 +241,6 @@ const EditAccount = () => {
           pressConfirm={() => updateInforAcoount()}
         />
       )}
-      {modalCameraAvatar && (
-        <CustomModalCamera
-          openCamera={() => openCameraAvatar()}
-          openGallery={() => openGalleryAvatar()}
-          modalVisible={modalCameraAvatar}
-          onRequestClose={() => setModalCameraAvatar(false)}
-          cancel={() => setModalCameraAvatar(false)}
-        />
-      )}
-      {modalCamera && (
-        <CustomModalCamera
-          openCamera={() => openCamera()}
-          openGallery={() => openGallery()}
-          modalVisible={modalCamera}
-          onRequestClose={() => setModalCamera(false)}
-          cancel={() => setModalCamera(false)}
-        />
-      )}
       {modalBirthDay && (
         <CustomModalDateTimePicker
           onCancel={() => setModalBirthDay(false)}
@@ -276,7 +278,7 @@ const EditAccount = () => {
           onPress={() => navigation.goBack()}
         />
         <TouchableOpacity
-          onPress={() => setModalCameraAvatar(true)}
+          onPress={() => renderActionSheet(false)}
           style={[styles.viewCenter, styles.viewAvatar]}>
           {user?.avatarImage?.fileUrl ? (
             <Image
@@ -400,7 +402,7 @@ const EditAccount = () => {
           labelUpload={'Thêm ảnh CMND/ CCCD'}
           data={user?.identityImages}
           deleteButton={true}
-          openModal={() => setModalCamera(true)}
+          openModal={() => renderActionSheet(true)}
           deleteItem={(item: any) => {
             if (item?.id) {
               Alert.alert(

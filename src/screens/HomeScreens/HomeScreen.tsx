@@ -98,8 +98,6 @@ const HomeScreen = () => {
       });
   };
 
-  const [show, setShow] = useState(false);
-
   return (
     <View style={styles.container}>
       {loading && <LoadingComponent modalVisible={loading} />}
@@ -114,6 +112,7 @@ const HomeScreen = () => {
           }}
         />
       )}
+
       <AppBarSearchComponent
         iconHome={icons.ic_logoApp}
         label={'Trang chủ'}
@@ -134,6 +133,7 @@ const HomeScreen = () => {
         onChangeText={(text: string) => setTextSearch(text)}
         placeholder={'Tìm kiếm...'}
       />
+
       <ScrollView style={styles.eachContainer}>
         <View style={styles.viewRow}>
           <CustomViewButton
@@ -334,4 +334,3 @@ const styleOption = StyleSheet.create({
   },
 });
 export default HomeScreen;
-

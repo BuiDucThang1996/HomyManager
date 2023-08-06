@@ -14,7 +14,6 @@ import RenderService from '../../../components/renderComponent/RenderService';
 import RenderAmenity from '../../../components/renderComponent/RenderAmenity';
 import TextTitleComponent from '../../../components/commonComponent/TextTitleComponent';
 import CustomTwoButtonBottom from '../../../components/commonComponent/CustomTwoButtonBottom';
-import CustomModalCamera from '../../../components/commonComponent/CustomModalCamera';
 import LoadingComponent from '../../../components/commonComponent/LoadingComponent';
 import SuggestComponent from '../../../components/commonComponent/SuggestComponent';
 import {useDispatch, useSelector} from 'react-redux';
@@ -40,6 +39,7 @@ import ComponentButton from '../../../components/commonComponent/ComponentButton
 import {StraightLine} from '../../../components/commonComponent/LineConponent';
 import ComponentRenderImage from '../../../components/renderComponent/ComponentRenderImage';
 import {updateReloadStatus} from '../../../store/slices/reloadSlice';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 const EditUnitInfor = () => {
   const navigation: any = useNavigation();
@@ -129,8 +129,34 @@ const EditUnitInfor = () => {
     return <RenderAmenity label={item?.name} disabled={true} />;
   };
 
+  const {showActionSheetWithOptions} = useActionSheet();
+
+  const renderActionSheet = () => {
+    const options = ['Camera', 'Library', 'Cancel'];
+    const destructiveButtonIndex = 2;
+    const cancelButtonIndex = 2;
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        switch (selectedIndex) {
+          case 0:
+             openCamera();
+            break;
+          case 1:
+            openGallery();
+            break;
+          case 2:
+            break;
+        }
+      },
+    );
+  };
+
   const openCamera = () => {
-    setModalCamera(false);
     onOpenCamera()
       .then((image: any) => {
         let eachImg = {...image[0]};
@@ -141,12 +167,11 @@ const EditUnitInfor = () => {
         setUnit(eachResult);
       })
       .catch(e => {
-        setModalCamera(false);
+        console.log(e);
       });
   };
 
   const openGallery = () => {
-    setModalCamera(false);
     onOpenLibrary()
       .then(async (image: any) => {
         let eachImages = [...unit?.images];
@@ -158,7 +183,7 @@ const EditUnitInfor = () => {
         setUnitImages(newResultImages);
       })
       .catch(e => {
-        setModalCamera(false);
+        console.log(e);
       });
   };
 
@@ -241,15 +266,6 @@ const EditUnitInfor = () => {
             setUnit(eachUnit);
             setModalUnitType(false);
           }}
-        />
-      )}
-      {modalCamera && (
-        <CustomModalCamera
-          openCamera={() => openCamera()}
-          openGallery={() => openGallery()}
-          modalVisible={modalCamera}
-          onRequestClose={() => setModalCamera(false)}
-          cancel={() => setModalCamera(false)}
         />
       )}
       <AppBarComponent
@@ -453,7 +469,7 @@ const EditUnitInfor = () => {
             labelUpload={'Tải lên ảnh phòng'}
             data={unit?.images}
             deleteButton={true}
-            openModal={() => setModalCamera(true)}
+            openModal={() => renderActionSheet()}
             deleteItem={(item: any) => {
               if (item?.id) {
                 Alert.alert(

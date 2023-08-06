@@ -9,7 +9,6 @@ import CustomTimeButtons from '../../../components/commonComponent/CustomTimeBut
 import CustomModalDateTimePicker from '../../../components/commonComponent/CustomModalDateTimePicker';
 import CustomTwoButtonBottom from '../../../components/commonComponent/CustomTwoButtonBottom';
 import LoadingComponent from '../../../components/commonComponent/LoadingComponent';
-import CustomModalCamera from '../../../components/commonComponent/CustomModalCamera';
 import CustomPickerDay from '../../../components/commonComponent/CustomPickerDay';
 import SuggestComponent from '../../../components/commonComponent/SuggestComponent';
 import RenderAmenity from '../../../components/renderComponent/RenderAmenity';
@@ -40,6 +39,7 @@ import ComponentRenderImage from '../../../components/renderComponent/ComponentR
 import {StraightLine} from '../../../components/commonComponent/LineConponent';
 import RenderServiceInput from '../../../components/renderComponent/RenderServiceInput';
 import BottomSheetPicker from '../../../components/commonComponent/BottomSheetPicker';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 const CreateContract = () => {
   const navigation: any = useNavigation();
@@ -70,7 +70,6 @@ const CreateContract = () => {
   const [modalEndDate, setModalEndDate] = useState(false);
   const [modalStartChargeDate, setModalStartChargeDate] = useState(false);
   const [modalPaymentDuration, setModalPaymentDuration] = useState(false);
-  const [modalCamera, setModalCamera] = useState(false);
   const [modalCreateContract, setModalCreateContract] = useState(false);
 
   const [hause, setHause] = useState<any>(null);
@@ -158,30 +157,55 @@ const CreateContract = () => {
   };
 
   const renderSelectAmenity = (item: any, index: any) => {
-    return <RenderAmenity label={item?.name} />;
+    return <RenderAmenity label={item?.name} disabled={true} />;
+  };
+
+  const {showActionSheetWithOptions} = useActionSheet();
+
+  const renderActionSheet = () => {
+    const options = ['Camera', 'Library', 'Cancel'];
+    const destructiveButtonIndex = 2;
+    const cancelButtonIndex = 2;
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        switch (selectedIndex) {
+          case 0:
+            openCamera();
+            break;
+          case 1:
+            openGallery();
+            break;
+          case 2:
+            break;
+        }
+      },
+    );
   };
 
   const openCamera = () => {
-    setModalCamera(false);
     onOpenCamera().then((image:any) => {
       let eachImg = {...image[0]};
       const eachResult: any = [...contractImages, eachImg];
       setContractImages(eachResult);
     })
     .catch(e => {
-      setModalCamera(false);
+      console.log(e);
     });
   };
 
   const openGallery = () => {
-    setModalCamera(false);
     onOpenLibrary().then(async (image:any) => {
       const eachResult = [...contractImages];
       const newResult = eachResult.concat(image);
       setContractImages(newResult);
     })
     .catch(e => {
-      setModalCamera(false);
+      console.log(e);
     });
   };
 
@@ -228,6 +252,7 @@ const CreateContract = () => {
   const renderSelectTenant = (item: any, index: any) => {
     return (
       <CustomPersonInfor
+        disabled={true}
         styleView={{marginBottom: 10}}
         userName={`${item?.fullName}`}
         phoneNumber={`${item?.phoneNumber}`}
@@ -410,15 +435,7 @@ const CreateContract = () => {
           }}
         />
       )}
-      {modalCamera && (
-        <CustomModalCamera
-          openCamera={() => openCamera()}
-          openGallery={() => openGallery()}
-          modalVisible={modalCamera}
-          onRequestClose={() => setModalCamera(false)}
-          cancel={() => setModalCamera(false)}
-        />
-      )}
+     
       <AppBarComponent
         iconLeft={icons.ic_back}
         label={'Tạo hợp đồng'}
@@ -618,7 +635,7 @@ const CreateContract = () => {
           labelUpload={'Thêm ảnh'}
           data={contractImages}
           deleteButton={true}
-          openModal={() => setModalCamera(true)}
+          openModal={() => renderActionSheet()}
           deleteItem={(item: any) => {
             let result = [...contractImages];
             let newResult = result.filter(itemResult => itemResult !== item);

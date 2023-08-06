@@ -5,7 +5,6 @@ import AppBarComponent from '../../../components/appBarComponent/AppBarComponent
 import {colors, icons, images} from '../../../constants';
 import CustomTwoButtonBottom from '../../../components/commonComponent/CustomTwoButtonBottom';
 import CustomModalNotify from '../../../components/commonComponent/CustomModalNotify';
-import CustomModalCamera from '../../../components/commonComponent/CustomModalCamera';
 import SuggestComponent from '../../../components/commonComponent/SuggestComponent';
 import TextTitleComponent from '../../../components/commonComponent/TextTitleComponent';
 import CustomModalDateTimePicker from '../../../components/commonComponent/CustomModalDateTimePicker';
@@ -23,6 +22,7 @@ import {
 } from '../../../apis/homeApi/fileDataApi';
 import ComponentRenderImage from '../../../components/renderComponent/ComponentRenderImage';
 import {StraightLine} from '../../../components/commonComponent/LineConponent';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 const AddNewTenant = () => {
   const navigation = useNavigation();
@@ -47,56 +47,77 @@ const AddNewTenant = () => {
   const [albumImage, setAlbumImage] = useState<any>([]);
   const [albumImageUser, setAlbumImageUser] = useState<any>([]);
 
-  const [modalCamera, setModalCamera] = useState(false);
-  const [modalCameraUser, setModalCameraUser] = useState(false);
   const [birthDayValue, setBirthDayValue] = useState('');
   const [modalBirthDay, setModalBirthDay] = useState(false);
   const [identityIssueDateValue, setIdentityIssueDateValue] = useState('');
   const [modalIdentityIssueDate, setModalIdentityIssueDate] = useState(false);
 
+  const {showActionSheetWithOptions} = useActionSheet();
+
+  const renderActionSheet = (isPressAvatar:boolean) => {
+    const options = ['Camera', 'Library', 'Cancel'];
+    const destructiveButtonIndex = 2;
+    const cancelButtonIndex = 2;
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        switch (selectedIndex) {
+          case 0:
+            !isPressAvatar ? openCameraUser() : openCamera();
+            break;
+          case 1:
+            !isPressAvatar ? openGalleryUser() : openGallery();
+            break;
+          case 2:
+            break;
+        }
+      },
+    );
+  };
+
   const openCamera = () => {
-    setModalCamera(false);
     onOpenCamera().then((image:any) => {
       let eachImg = {...image[0]};
       const eachResult = [...albumImage, eachImg];
       setAlbumImage(eachResult);
     })
     .catch(e => {
-      setModalCamera(false);
+      console.log(e);
     });
   };
   const openGallery = () => {
-    setModalCamera(false);
     onOpenLibrary().then(async (image:any) => {
       const eachResult = [...albumImage];
       const newResult = eachResult.concat(image);
       setAlbumImage(newResult);
     })
     .catch(e => {
-      setModalCamera(false);
+      console.log(e);
     });
   };
   const openCameraUser = () => {
-    setModalCameraUser(false);
     onOpenCamera().then((image:any) => {
       let eachImg = {...image[0]};
       let eachResult = [...albumImageUser, eachImg];
       setAlbumImageUser(eachResult);
     })
     .catch(e => {
-      setModalCameraUser(false);
+      console.log(e);
     });
   };
 
   const openGalleryUser = () => {
-    setModalCameraUser(false);
     onOpenLibrary().then(async (image:any) => {
       let eachResult = [...albumImageUser];
       let newResult = eachResult.concat(image);
       setAlbumImageUser(newResult);
     })
     .catch(e => {
-      setModalCamera(false);
+      console.log(e);
     });
   };
 
@@ -160,24 +181,6 @@ const AddNewTenant = () => {
           modalVisible={modalAddTenant}
           onRequestClose={() => setModalAddTenant(false)}
           pressConfirm={() => createNewTenant()}
-        />
-      )}
-      {modalCamera && (
-        <CustomModalCamera
-          openCamera={() => openCamera()}
-          openGallery={() => openGallery()}
-          modalVisible={modalCamera}
-          onRequestClose={() => setModalCamera(false)}
-          cancel={() => setModalCamera(false)}
-        />
-      )}
-      {modalCameraUser && (
-        <CustomModalCamera
-          openCamera={() => openCameraUser()}
-          openGallery={() => openGalleryUser()}
-          modalVisible={modalCameraUser}
-          onRequestClose={() => setModalCameraUser(false)}
-          cancel={() => setModalCameraUser(false)}
         />
       )}
       {modalBirthDay && (
@@ -323,7 +326,7 @@ const AddNewTenant = () => {
           labelUpload={'Thêm ảnh người dùng'}
           data={albumImageUser}
           deleteButton={true}
-          openModal={() => setModalCameraUser(true)}
+          openModal={() => renderActionSheet(false)}
           deleteItem={(item: any) => {
             let result = [...albumImageUser];
             let newResult = result.filter(itemResult => itemResult !== item);
@@ -338,7 +341,7 @@ const AddNewTenant = () => {
           labelUpload={'Thêm ảnh CMND/ CCCD'}
           data={albumImage}
           deleteButton={true}
-          openModal={() => setModalCamera(true)}
+          openModal={() => renderActionSheet(true)}
           deleteItem={(item: any) => {
             let result = [...albumImage];
             let newResult = result.filter(itemResult => itemResult !== item);
